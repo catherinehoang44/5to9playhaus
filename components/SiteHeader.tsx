@@ -1,5 +1,5 @@
-import { CrispImage } from "@/components/CrispImage";
 import { CtaLink } from "@/components/CtaLink";
+import { NavCenterTitle } from "@/components/NavCenterTitle";
 import { SiteContainer } from "./SiteContainer";
 
 function NavDivider() {
@@ -23,9 +23,7 @@ export function SiteHeader() {
 
           <NavDivider />
 
-          <p className="shrink-0 px-1 text-center font-nav-title text-[32px] font-bold leading-none text-nav-brown">
-            Polymer Clay Workshops
-          </p>
+          <NavCenterTitle />
 
           <NavDivider />
 

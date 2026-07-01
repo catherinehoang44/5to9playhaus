@@ -1,4 +1,4 @@
-import { Fredoka, Bebas_Neue, Nunito_Sans, Inter } from "next/font/google";
+import { Fredoka, Bebas_Neue, Nunito_Sans, Inter, Rubik_Mono_One } from "next/font/google";
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -28,6 +28,12 @@ const inter = Inter({
   weight: ["400", "500", "700"],
 });
 
+const rubikMonoOne = Rubik_Mono_One({
+  variable: "--font-rubik-mono",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const metadata: Metadata = {
   title: "5-9 PLAY HAUS | Polymer Clay Workshops",
   description:
@@ -42,9 +48,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fredoka.variable} ${bebasNeue.variable} ${nunitoSans.variable} ${inter.variable} h-full antialiased`}
+      className={`${fredoka.variable} ${bebasNeue.variable} ${nunitoSans.variable} ${inter.variable} ${rubikMonoOne.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-body">
+      <body className="bg-grid flex min-h-full flex-col font-body">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

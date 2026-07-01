@@ -18,6 +18,7 @@ export const assets = {
   workshopCorporate: "/assets/workshop-corporate@2x.png",
   workshopPrivate: "/assets/workshop-private@2x.png",
   workshopDivider: "/assets/workshop-divider.svg",
+  privacyDivider: "/assets/privacy-divider.svg",
   galleryFigurines: "/assets/gallery-figurines@2x.png",
   galleryPolaroidPhoto: "/assets/gallery-polaroid-photo@2x.png",
   galleryChibi: "/assets/gallery-chibi.png",
