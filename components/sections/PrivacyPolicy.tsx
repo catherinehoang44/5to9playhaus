@@ -21,7 +21,7 @@ function PolicyBlock({ block, isFirst }: { block: PrivacyBlock; isFirst: boolean
     case "heading":
       return (
         <h2
-          className={`font-workshop-body text-[36px] font-medium leading-none text-black ${
+          className={`font-workshop-body text-heading-privacy-section font-medium leading-none text-black ${
             isFirst ? "" : "mt-[150px]"
           }`}
         >
@@ -36,13 +36,13 @@ function PolicyBlock({ block, isFirst }: { block: PrivacyBlock; isFirst: boolean
       );
     case "paragraph":
       return (
-        <p className="mt-6 font-workshop-body text-[20px] font-medium leading-[1.2] tracking-[0.4px] text-black">
+        <p className="mt-6 font-workshop-body text-description font-medium leading-[1.2] tracking-[0.36px] text-black">
           {block.text}
         </p>
       );
     case "list":
       return (
-        <ul className="mt-6 list-disc pl-9 font-workshop-body text-[20px] font-medium tracking-[0.4px] text-black">
+        <ul className="mt-6 list-disc pl-9 font-workshop-body text-description font-medium tracking-[0.36px] text-black">
           {block.items.map((item) => (
             <li key={item} className="leading-[1.2] [&+&]:mt-0">
               {item}

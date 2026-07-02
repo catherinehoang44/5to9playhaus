@@ -22,9 +22,9 @@ function WorkshopTemplate({
   alt,
 }: WorkshopTemplateProps) {
   return (
-    <article className="flex w-full flex-col items-center gap-10 lg:flex-row lg:items-center lg:gap-[210px]">
-      <div className="flex w-full max-w-[390px] shrink-0 flex-col gap-6">
-        <h3 className="font-nav-title text-[42px] leading-none text-nav-brown">
+    <article className="flex w-full flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-[210px]">
+      <div className="flex w-full flex-col items-start gap-6 lg:max-w-[390px] lg:shrink-0">
+        <h3 className="w-full text-left font-nav-title text-heading-main-title leading-none text-nav-brown">
           <span className="block">{title[0]}</span>
           <span className="block">{title[1]}</span>
         </h3>
@@ -38,7 +38,7 @@ function WorkshopTemplate({
           aria-hidden
         />
 
-        <div className="font-workshop-body text-[24px] font-medium leading-[1.2] tracking-[0.48px] text-nav-brown">
+        <div className="w-full text-left font-workshop-body text-description font-medium leading-[1.2] tracking-[0.36px] text-nav-brown">
           {description}
         </div>
 

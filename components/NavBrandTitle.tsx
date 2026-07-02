@@ -1,11 +1,21 @@
 import Link from "next/link";
 
+type NavBrandTitleProps = {
+  align?: "left" | "center";
+  className?: string;
+};
+
 /** Figma nav brand title — node 78:11149 */
-export function NavBrandTitle() {
+export function NavBrandTitle({
+  align = "center",
+  className = "",
+}: NavBrandTitleProps) {
+  const alignClass = align === "left" ? "text-left" : "text-center";
+
   return (
     <Link
       href="/"
-      className="shrink-0 px-1 text-center font-nav-brand text-[42px] leading-normal tracking-[-2.52px] text-[#d8c648] transition-opacity hover:opacity-85"
+      className={`min-w-0 px-1 font-nav-brand text-heading-nav-brand leading-normal tracking-[-2.52px] text-[#d8c648] transition-opacity hover:opacity-85 ${alignClass} ${className}`.trim()}
       aria-label="5 to 9 Playhaus — home"
     >
       <span>5</span>

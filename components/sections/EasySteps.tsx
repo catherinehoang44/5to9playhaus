@@ -2,6 +2,9 @@ import { CrispImage } from "@/components/CrispImage";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
 
+/** Figma step image frame */
+const STEP_IMAGE_ASPECT = 280 / 390;
+
 const steps = [
   {
     number: 1,
@@ -34,11 +37,14 @@ function StepCard({
   objectPosition,
 }: (typeof steps)[number]) {
   return (
-    <div className="flex w-[280px] max-w-full shrink-0 flex-col gap-4">
-      <p className="font-nav-cta text-[36px] font-bold leading-none text-[#d8c648]">
+    <div className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-4">
+      <p className="font-nav-cta text-description font-bold leading-none text-[#d8c648]">
         {number}. {label}
       </p>
-      <div className="relative h-[390px] w-[280px] max-w-full overflow-hidden rounded-lg">
+      <div
+        className="relative w-full overflow-hidden rounded-lg"
+        style={{ aspectRatio: STEP_IMAGE_ASPECT }}
+      >
         <CrispImage
           src={image}
           alt={alt}
@@ -58,14 +64,14 @@ function StepCard({
 
 export function EasySteps() {
   return (
-    <section className="bg-[#cb513c]">
-      <SiteContainer className="flex min-h-[572px] items-center justify-start gap-10 px-4 sm:gap-12 sm:px-6">
-        <h2 className="vertical-label shrink-0 self-center font-nav-title text-[clamp(3rem,6.7vw,6rem)] font-bold leading-[0.84] tracking-[0.04em] text-[#fffaee] [-webkit-text-stroke:4px_#e57c62] [paint-order:stroke_fill]">
+    <section className="overflow-x-clip bg-[#cb513c]">
+      <SiteContainer className="flex min-w-0 items-end justify-start gap-6 px-4 py-16 sm:gap-10 sm:px-6 sm:py-20">
+        <h2 className="vertical-label shrink-0 font-nav-title text-heading-easy-steps font-bold leading-[0.84] tracking-[0.04em] text-[#fffaee] [-webkit-text-stroke:4px_#e57c62] [paint-order:stroke_fill]">
           <span className="block">EASY</span>
           <span className="block">STEPS</span>
         </h2>
 
-        <div className="flex flex-col items-start justify-start gap-10 md:flex-row md:gap-10">
+        <div className="flex min-w-0 flex-1 flex-col items-stretch gap-8 sm:gap-10 md:flex-row md:items-start">
           {steps.map((step) => (
             <StepCard key={step.number} {...step} />
           ))}

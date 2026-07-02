@@ -1,45 +1,56 @@
-import { CrispImage } from "@/components/CrispImage";
+import { CrispFillImage, CrispImage } from "@/components/CrispImage";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
 
-/** Figma who-we-are frame */
-const SECTION_W = 1440;
-const SECTION_H = 995;
+const BADGE_W = 776;
+const BADGE_H = 913;
+
+
+/** ID card content area — Figma 720.4 × 452 */
+const CARD_W = 720.4;
+const CARD_H = 452;
+/** Text block max height within card (368.3px in Figma) */
+const TEXT_MAX_HEIGHT_CARD = ((452 - (516 - 432.3)) / CARD_H) * 100;
+
+const STRAP_W = 127.4;
+const STRAP_H = 268.5;
+/** Strap texture (image 127) — 740 × 493 */
+const STRAP_TEXTURE_W = 740;
+const STRAP_TEXTURE_H = 493;
+
+/** Figma badge frame layers — 94:2404 (accent) / 94:2409 (base), 8px apart */
+const BADGE_FRAME_TOP = 324.6;
+const BADGE_FRAME_H = 588.4;
+const BADGE_BG_LAYER_OFFSET = 8;
 
 function Badge() {
   return (
     <div
-      className="relative w-full max-w-[776px]"
+      className="relative w-full max-w-[776px] [container-type:size]"
       style={{ aspectRatio: "776 / 913" }}
     >
+      {/* Badge bg — FF9B8A accent (8px higher) under CB513C base */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 bg-[#e60000]"
+        className="absolute left-0 z-0 w-full"
         style={{
-          top: 0,
-          width: `${(127.4 / 776) * 100}%`,
-          height: `${(268.5 / 913) * 100}%`,
-        }}
-      />
-
-      <div
-        className="absolute left-1/2 -translate-x-1/2 rounded-[6px] border-t-[3px] border-[#e68925] bg-[#c06300]"
-        style={{
-          top: `${(256.3 / 913) * 100}%`,
-          width: `${(142.6 / 776) * 100}%`,
-          height: `${(110.7 / 913) * 100}%`,
+          top: `${((BADGE_FRAME_TOP - BADGE_BG_LAYER_OFFSET) / BADGE_H) * 100}%`,
+          height: `${(BADGE_FRAME_H / BADGE_H) * 100}%`,
         }}
       >
-        <div
-          className="absolute left-1/2 -translate-x-1/2 rounded-[6px] bg-[#983b00]"
-          style={{ bottom: "18%", width: "67%", height: "9.6%" }}
+        <CrispImage
+          src={assets.whoWeAreBadgeFrameAccent}
+          alt=""
+          width={776}
+          height={588}
+          className="h-full w-full"
+          aria-hidden
         />
       </div>
-
       <div
-        className="absolute left-0 w-full"
+        className="absolute left-0 z-[1] w-full"
         style={{
-          top: `${(324.6 / 913) * 100}%`,
-          height: `${(588.4 / 913) * 100}%`,
+          top: `${(BADGE_FRAME_TOP / BADGE_H) * 100}%`,
+          height: `${(BADGE_FRAME_H / BADGE_H) * 100}%`,
         }}
       >
         <CrispImage
@@ -52,8 +63,42 @@ function Badge() {
         />
       </div>
 
+      {/* Lanyard strap + buckle — above badge frame */}
       <div
-        className="absolute overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#fffaee]"
+        className="absolute left-1/2 z-10 -translate-x-1/2 overflow-hidden bg-[#e60000]"
+        style={{
+          top: 0,
+          width: `${(STRAP_W / BADGE_W) * 100}%`,
+          height: `${(STRAP_H / BADGE_H) * 100}%`,
+        }}
+      >
+        <CrispFillImage
+          src={assets.whoWeAreStrapTexture}
+          alt=""
+          width={STRAP_TEXTURE_W}
+          height={STRAP_TEXTURE_H}
+          className="pointer-events-none max-w-none object-cover mix-blend-color-burn opacity-20"
+          aria-hidden
+        />
+      </div>
+
+      <div
+        className="absolute left-1/2 z-10 flex -translate-x-1/2 items-center justify-center rounded-[6px] border-t-[3px] border-[#e68925] bg-[#c06300]"
+        style={{
+          top: `${(256.3 / 913) * 100}%`,
+          width: `${(142.6 / 776) * 100}%`,
+          height: `${(110.7 / 913) * 100}%`,
+        }}
+      >
+        <div
+          className="rounded-[6px] bg-[#983b00]"
+          style={{ width: "67%", height: "9.6%" }}
+        />
+      </div>
+
+      {/* ID card content */}
+      <div
+        className="absolute z-20 overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#fffaee]"
         style={{
           left: `${(27.6 / 776) * 100}%`,
           top: `${(432.3 / 913) * 100}%`,
@@ -71,38 +116,23 @@ function Badge() {
         />
 
         <div
-          className="absolute overflow-hidden rounded-[4px] bg-[#8e1c08]"
+          className="font-who-we-are absolute top-1/2 flex -translate-y-1/2 flex-col gap-[0.35em] overflow-hidden text-[#563529]"
           style={{
-            left: `${((68.8 - 27.6) / 720.4) * 100}%`,
-            top: `${((493.4 - 432.3) / 452) * 100}%`,
-            width: `${(286.4 / 720.4) * 100}%`,
-            height: `${(336 / 452) * 100}%`,
-          }}
-        >
-          <CrispImage
-            src={assets.whoWeAreFigurine}
-            alt="Hand holding a finished clay figurine"
-            width={150}
-            height={266}
-            className="absolute left-1/2 top-1/2 h-[115%] w-auto max-w-none -translate-x-1/2 -translate-y-[45%]"
-          />
-        </div>
-
-        <div
-          className="font-who-we-are absolute text-[#563529] tracking-[1px]"
-          style={{
-            left: `${((390 - 27.6) / 720.4) * 100}%`,
-            top: `${((516 - 432.3) / 452) * 100}%`,
-            width: `${(302 / 720.4) * 100}%`,
-            fontSize: "clamp(1rem, 2.6vw, 1.625rem)",
+            left: `${((390 - 27.6) / CARD_W) * 100}%`,
+            width: `${(302 / CARD_W) * 100}%`,
+            maxHeight: `${TEXT_MAX_HEIGHT_CARD}%`,
+            fontSize:
+              "calc(var(--badge-bio-font-size) / var(--badge-bio-badge-height) * 100cqh)",
+            letterSpacing:
+              "calc(var(--badge-bio-letter-spacing) / var(--badge-bio-badge-height) * 100cqh)",
             lineHeight: 1.05,
           }}
         >
-          <p className="mb-3">
+          <p>
             Hi, I&apos;m your host,{" "}
             <span className="font-bold text-[#8e1c08]">Diem</span>!
           </p>
-          <p className="mb-3">
+          <p>
             Every workshop I host is built around the feeling of slowing down
             without the pressure to make anything &ldquo;great&rdquo;.
           </p>
@@ -115,14 +145,15 @@ function Badge() {
 
 export function WhoWeAre() {
   return (
-    <section className="bg-grid overflow-x-clip overflow-y-visible">
+    <section className="bg-grid -mt-[var(--section-gap)] overflow-x-clip overflow-y-visible">
       <SiteContainer
-        className="relative flex items-start justify-center px-4 pl-14 sm:px-6 sm:pl-16"
-        style={{ aspectRatio: `${SECTION_W} / ${SECTION_H}` }}
+        className="relative flex items-start justify-center px-4 pb-[var(--who-we-are-section-padding)] pl-14 sm:px-6 sm:pl-16"
       >
-        <h2 className="vertical-label absolute top-1/2 left-4 -translate-y-1/2 font-nav-title text-[82px] font-bold leading-none tracking-[13.12px] whitespace-nowrap text-[#e57c62] sm:left-6">
-          WHO WE ARE
-        </h2>
+        <div className="pointer-events-none absolute inset-y-0 left-4 flex items-end justify-center sm:left-6">
+          <h2 className="vertical-label text-center font-nav-title text-heading-who-we-are font-bold leading-none tracking-[13.12px] whitespace-nowrap text-[#e57c62]">
+            WHO WE ARE
+          </h2>
+        </div>
 
         <div className="flex w-full justify-center self-start">
           <Badge />

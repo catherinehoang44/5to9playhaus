@@ -1,4 +1,5 @@
 import { CrispImage } from "@/components/CrispImage";
+import { BannerDiem } from "@/components/BannerDiem";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
 
@@ -13,7 +14,7 @@ type HeroProps = {
 function PrivacyBannerTitle() {
   return (
     <div
-      className="flex h-full shrink-0 flex-col justify-center font-nav-title text-[82px] font-bold leading-none text-white"
+      className="flex h-full shrink-0 flex-col justify-center font-nav-title text-heading-privacy-banner font-bold leading-none text-white"
       aria-label="Privacy and Refund Policy"
     >
       <span className="block">Privacy</span>
@@ -49,7 +50,7 @@ export function Hero({ variant = "home" }: HeroProps) {
         />
       </div>
 
-      <SiteContainer className="relative z-10 flex h-full min-h-0 w-full flex-1 items-start justify-between">
+      <SiteContainer className="relative z-10 flex h-full min-h-0 w-full flex-1 items-stretch justify-between">
         {variant === "privacy" ? (
           <PrivacyBannerTitle />
         ) : (
@@ -63,19 +64,9 @@ export function Hero({ variant = "home" }: HeroProps) {
             style={{ aspectRatio: "466 / 497" }}
           />
         )}
-        <CrispImage
-          src={assets.bannerDiem}
-          alt="Diem, workshop host"
-          width={634}
-          height={586}
-          fetchPriority="high"
-          className="shrink-0 object-contain object-top"
-          style={{
-            width: `${(634 / 1242) * 100}%`,
-            maxWidth: 634,
-            aspectRatio: "634 / 586",
-          }}
-        />
+        <div className="h-full shrink-0 self-stretch" role="img" aria-label="Diem, workshop host">
+          <BannerDiem className="h-full" />
+        </div>
       </SiteContainer>
     </section>
   );

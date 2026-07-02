@@ -7,6 +7,7 @@ type CtaLinkProps = {
   label: string;
   icon: "calendar" | "mail";
   iconPosition?: "left" | "right";
+  className?: string;
 };
 
 export function CtaLink({
@@ -14,6 +15,7 @@ export function CtaLink({
   label,
   icon,
   iconPosition = "left",
+  className = "",
 }: CtaLinkProps) {
   const iconSrc =
     icon === "calendar" ? assets.iconCalendar : assets.iconMail;
@@ -36,10 +38,10 @@ export function CtaLink({
   return (
     <Link
       href={href}
-      className="inline-flex w-fit items-center gap-2 bg-nav-mustard px-2 py-0 transition-opacity hover:opacity-85"
+      className={`inline-flex w-fit shrink-0 items-center gap-2 bg-nav-mustard px-2 py-0 transition-opacity hover:opacity-85 ${className}`.trim()}
     >
       {iconPosition === "left" && iconEl}
-      <span className="font-nav-cta text-[24px] font-bold uppercase leading-none text-nav-brown">
+      <span className="font-nav-cta text-description font-bold uppercase leading-normal whitespace-nowrap text-nav-brown">
         {label}
       </span>
       {iconPosition === "right" && iconEl}

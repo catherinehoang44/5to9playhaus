@@ -31,6 +31,7 @@ export const assets = {
   iconCalendar: "/assets/icon-calendar.svg",
   iconMail: "/assets/icon-mail.svg",
   whoWeAreBadgeFrame: "/assets/who-we-are-badge-frame.svg",
+  whoWeAreBadgeFrameAccent: "/assets/who-we-are-badge-frame-accent.svg",
   whoWeAreBadgeTexture: "/assets/who-we-are-badge-texture.png",
-  whoWeAreFigurine: "/assets/who-we-are-figurine.png",
+  whoWeAreStrapTexture: "/assets/who-we-are-strap-texture.png",
 } as const;

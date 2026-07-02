@@ -17,6 +17,22 @@
   --color-text: #3d2c24;
   --site-max-width: 1242px;
   --section-gap: 160px;
+  --description-text-size: 18px;
+
+  /* Section / page headings — update sizes here */
+  --heading-who-we-are-label-size: 82px;
+  --heading-privacy-banner-size: 82px;
+  --heading-easy-steps-label-size: clamp(3rem, 6.7vw, 6rem);
+  --heading-main-title-size: 36px;
+  --heading-privacy-section-size: 36px;
+  --heading-nav-brand-size: 42px;
+  --heading-nav-brand-size-fluid: clamp(24px, 2.5vw + 1rem, 32px);
+
+  /* Who We Are — section padding below badge; bio scales with badge height (26px at 913px) */
+  --who-we-are-section-padding: 64px;
+  --badge-bio-font-size: 26px;
+  --badge-bio-letter-spacing: 1px;
+  --badge-bio-badge-height: 913px;
 }
 
 @theme inline {
@@ -36,6 +52,14 @@
   --font-workshop-body: var(--font-inter), system-ui, sans-serif;
   --font-nav-brand: var(--font-rubik-mono), ui-monospace, monospace;
   --max-width-site: 1242px;
+  --text-description: var(--description-text-size);
+  --text-heading-who-we-are: var(--heading-who-we-are-label-size);
+  --text-heading-privacy-banner: var(--heading-privacy-banner-size);
+  --text-heading-easy-steps: var(--heading-easy-steps-label-size);
+  --text-heading-main-title: var(--heading-main-title-size);
+  --text-heading-privacy-section: var(--heading-privacy-section-size);
+  --text-heading-nav-brand: var(--heading-nav-brand-size);
+  --text-heading-nav-brand-fluid: var(--heading-nav-brand-size-fluid);
 }
 
 body {
