@@ -7,6 +7,14 @@ import { assets } from "@/lib/assets";
 const DESIGN_W = 1242;
 const DESIGN_H = 669;
 
+/** Natural aspect of gallery source images */
+const FIGURINES_ASPECT = "3072 / 4096";
+const POLAROID_PHOTO_ASPECT = "3276 / 4096";
+
+/** Tape SVG viewBox aspects */
+const TAPE_WIDE_ASPECT = "358.201 / 41.8418";
+const TAPE_NARROW_ASPECT = "63.4535 / 92.8867";
+
 function designBox(
   left: number,
   top: number,
@@ -28,27 +36,35 @@ const chibi = designBox(667, 492, 177, 177);
 function Tape({
   tape,
   overlay,
+  aspect,
   className,
+  style,
 }: {
   tape: string;
   overlay: string;
+  aspect: string;
   className: string;
+  style?: CSSProperties;
 }) {
   return (
-    <div className={`pointer-events-none absolute ${className}`} aria-hidden>
+    <div
+      className={`pointer-events-none absolute z-30 ${className}`}
+      style={{ aspectRatio: aspect, ...style }}
+      aria-hidden
+    >
       <CrispImage
         src={tape}
         alt=""
         width={360}
         height={42}
-        className="absolute inset-0 h-full w-full"
+        className="absolute inset-0 h-full w-full object-contain"
       />
       <CrispImage
         src={overlay}
         alt=""
         width={360}
         height={42}
-        className="absolute inset-0 h-full w-full mix-blend-multiply"
+        className="absolute inset-0 h-full w-full object-contain mix-blend-multiply"
       />
     </div>
   );
@@ -60,25 +76,19 @@ function LeftTapedPhoto() {
       <Tape
         tape={assets.galleryTapeWide}
         overlay={assets.galleryTapeWideOverlay}
-        className="inset-x-[23.67%] top-0 bottom-[92.09%]"
+        aspect={TAPE_WIDE_ASPECT}
+        className="left-[23.67%] top-[1%] w-[52.66%]"
       />
 
-      <div className="absolute inset-x-0 bottom-0 top-[3.95%] shadow-[-25px_0px_22px_-12px_rgba(0,0,0,0.25)]">
-        <div className="absolute inset-0 overflow-hidden">
-          <CrispImage
-            src={assets.galleryFigurines}
-            alt="Dozens of finished clay figurines arranged on moss"
-            width={717}
-            height={508}
-            className="absolute max-w-none"
-            style={{
-              width: "101.46%",
-              height: "190.92%",
-              left: "-0.73%",
-              top: "-70.16%",
-            }}
-          />
-        </div>
+      <div className="absolute inset-x-0 bottom-0 top-[3.95%] overflow-hidden shadow-[-25px_0px_22px_-12px_rgba(0,0,0,0.25)]">
+        <CrispImage
+          src={assets.galleryFigurines}
+          alt="Dozens of finished clay figurines arranged on moss"
+          width={3072}
+          height={4096}
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "center 25%" }}
+        />
       </div>
     </div>
   );
@@ -90,7 +100,8 @@ function RightPolaroid() {
       <Tape
         tape={assets.galleryTapeNarrow}
         overlay={assets.galleryTapeNarrowOverlay}
-        className="inset-x-[41.25%] top-0 bottom-[83.4%]"
+        aspect={TAPE_NARROW_ASPECT}
+        className="left-[41.25%] top-[1%] w-[17.5%]"
       />
 
       <div className="absolute inset-x-0 bottom-0 top-[12.57%] bg-[#e6e4e2] shadow-[-11px_20px_22px_0px_rgba(0,0,0,0.2)]" />
@@ -99,9 +110,9 @@ function RightPolaroid() {
         <CrispImage
           src={assets.galleryPolaroidPhoto}
           alt="Diem hosting a workshop"
-          width={382}
-          height={382}
-          className="absolute inset-0 h-full w-full object-cover"
+          width={3276}
+          height={4096}
+          className="h-full w-full object-cover"
         />
       </div>
 
@@ -118,10 +129,69 @@ function ClayDiem() {
       <CrispImage
         src={assets.galleryChibi}
         alt="Clay figurine of Diem"
-        width={177}
-        height={177}
-        className="h-full w-full max-w-none"
+        width={187}
+        height={188}
+        className="h-full w-full max-w-none object-contain"
       />
+    </div>
+  );
+}
+
+function MobileStacked() {
+  return (
+    <div className="flex flex-col items-center gap-10 px-4 sm:px-6 md:hidden">
+      <div className="relative w-full max-w-[360px]">
+        <Tape
+          tape={assets.galleryTapeWide}
+          overlay={assets.galleryTapeWideOverlay}
+          aspect={TAPE_WIDE_ASPECT}
+          className="left-1/2 top-[-14px] w-[60%] -translate-x-1/2"
+        />
+        <div className="w-full overflow-hidden bg-[#f6f0e6] shadow-[0_10px_22px_-10px_rgba(0,0,0,0.25)]">
+          <CrispImage
+            src={assets.galleryFigurines}
+            alt="Dozens of finished clay figurines arranged on moss"
+            width={3072}
+            height={4096}
+            className="block h-auto w-full"
+            style={{ aspectRatio: FIGURINES_ASPECT }}
+          />
+        </div>
+      </div>
+
+      <div className="relative w-full max-w-[320px]">
+        <Tape
+          tape={assets.galleryTapeNarrow}
+          overlay={assets.galleryTapeNarrowOverlay}
+          aspect={TAPE_NARROW_ASPECT}
+          className="left-1/2 top-[-14px] w-[16%] -translate-x-1/2"
+        />
+        <div className="bg-[#e6e4e2] px-4 pb-4 pt-8 shadow-[0_12px_22px_-8px_rgba(0,0,0,0.25)]">
+          <div className="w-full overflow-hidden">
+            <CrispImage
+              src={assets.galleryPolaroidPhoto}
+              alt="Diem hosting a workshop"
+              width={3276}
+              height={4096}
+              className="block h-auto w-full"
+              style={{ aspectRatio: POLAROID_PHOTO_ASPECT }}
+            />
+          </div>
+          <p className="mt-3 text-center font-body text-[clamp(0.95rem,3.5vw,1.15rem)] leading-none text-nav-brown">
+            With love, Diem
+          </p>
+        </div>
+        <div className="pointer-events-none absolute right-[-6%] bottom-[-6%] w-[36%] max-w-[120px]">
+          <CrispImage
+            src={assets.galleryChibi}
+            alt="Clay figurine of Diem"
+            width={187}
+            height={188}
+            className="block h-auto w-full"
+            style={{ aspectRatio: "187 / 188" }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -129,8 +199,9 @@ function ClayDiem() {
 export function Gallery() {
   return (
     <section className="bg-grid overflow-x-clip overflow-y-visible">
+      <MobileStacked />
       <SiteContainer
-        className="relative w-full"
+        className="relative hidden w-full md:block"
         style={{ paddingBottom: `${(DESIGN_H / DESIGN_W) * 100}%` }}
       >
         <LeftTapedPhoto />

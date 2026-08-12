@@ -1,3 +1,4 @@
+import { AnimatedFigurine } from "@/components/AnimatedFigurine";
 import { CrispFillImage, CrispImage } from "@/components/CrispImage";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
@@ -6,11 +7,41 @@ const BADGE_W = 776;
 const BADGE_H = 913;
 
 
-/** ID card content area — Figma 720.4 × 452 */
+/** ID card content area — Figma 720.4 × 452 (6px border ⇒ 708.4 × 440 inner content). */
 const CARD_W = 720.4;
 const CARD_H = 452;
+const CARD_BORDER = 6;
+const CARD_INNER_W = CARD_W - CARD_BORDER * 2;
+const CARD_INNER_H = CARD_H - CARD_BORDER * 2;
 /** Text block max height within card (368.3px in Figma) */
 const TEXT_MAX_HEIGHT_CARD = ((452 - (516 - 432.3)) / CARD_H) * 100;
+
+/**
+ * Figurine collage — Figma nodes 94:2420 (bg), 94:2421 (hand), 94:2431 (figurine).
+ * Positions expressed as % of the card's inner content box (708.4 × 440) so the hand
+ * lines up flush with the inner border on the left + bottom, the bg is a locked-ratio
+ * rectangle, and the figurine sits centered in the bg (which puts it on the palm).
+ */
+const HAND_W = 302;
+const HAND_H = 131.77;
+const BG_LEFT = 38.4;
+const BG_TOP = 54.18;
+const BG_W = 286.38;
+const BG_H = 335.99;
+const BG_ASPECT = BG_W / BG_H;
+/**
+ * Figurine rotation container — frames are 417×640 transparent PNGs whose
+ * yellow platforms are already padded to the horizontal center. The container
+ * is centered on the Figma palm/bg center (~182), so the platform stays locked
+ * on the hand as the silhouette rotates around it.
+ */
+const FIG_TOP = 87.82;
+const FIG_H = 266;
+const FIG_ASPECT = 440 / 640;
+const FIG_W = FIG_H * FIG_ASPECT;
+/** Palm / bg center from Figma (figurine + bg share this x). */
+const FIG_CENTER_X = BG_LEFT + BG_W / 2;
+const FIG_LEFT = FIG_CENTER_X - FIG_W / 2;
 
 const STRAP_W = 127.4;
 const STRAP_H = 268.5;
@@ -115,6 +146,42 @@ function Badge() {
           aria-hidden
         />
 
+        {/* Figurine bg — locked-aspect maroon rectangle on the left half of the card */}
+        <div
+          className="absolute rounded-[6px] bg-[#8e1c08]"
+          style={{
+            left: `${(BG_LEFT / CARD_INNER_W) * 100}%`,
+            top: `${(BG_TOP / CARD_INNER_H) * 100}%`,
+            width: `${(BG_W / CARD_INNER_W) * 100}%`,
+            aspectRatio: `${BG_ASPECT}`,
+          }}
+          aria-hidden
+        />
+
+        {/* Hand — pinned to inner bottom-left of the card, aspect-locked */}
+        <CrispImage
+          src={assets.whoWeAreHand}
+          alt=""
+          width={906}
+          height={396}
+          className="pointer-events-none absolute left-0 bottom-0 max-w-none"
+          style={{
+            width: `${(HAND_W / CARD_INNER_W) * 100}%`,
+            height: `${(HAND_H / CARD_INNER_H) * 100}%`,
+          }}
+          aria-hidden
+        />
+
+        {/* Figurine — 8-frame rotation flipbook, centered on the palm */}
+        <AnimatedFigurine
+          style={{
+            left: `${(FIG_LEFT / CARD_INNER_W) * 100}%`,
+            top: `${(FIG_TOP / CARD_INNER_H) * 100}%`,
+            width: `${(FIG_W / CARD_INNER_W) * 100}%`,
+            height: `${(FIG_H / CARD_INNER_H) * 100}%`,
+          }}
+        />
+
         <div
           className="font-who-we-are absolute top-1/2 flex -translate-y-1/2 flex-col gap-[0.35em] overflow-hidden text-[#563529]"
           style={{
@@ -146,16 +213,20 @@ function Badge() {
 export function WhoWeAre() {
   return (
     <section className="bg-grid -mt-[var(--section-gap)] overflow-x-clip overflow-y-visible">
-      <SiteContainer
-        className="relative flex items-start justify-center px-4 pb-[var(--who-we-are-section-padding)] pl-14 sm:px-6 sm:pl-16"
-      >
-        <div className="pointer-events-none absolute inset-y-0 left-4 flex items-end justify-center sm:left-6">
-          <h2 className="vertical-label text-center font-nav-title text-heading-who-we-are font-bold leading-none tracking-[13.12px] whitespace-nowrap text-[#e57c62]">
+      <SiteContainer className="relative px-4 pb-[var(--who-we-are-section-padding)] sm:px-6 lg:pl-16">
+        {/* Visual heading is desktop-only (vertical). Screen readers still get an h2. */}
+        <h2 className="sr-only">WHO WE ARE</h2>
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-6 hidden items-end justify-center lg:flex"
+        >
+          <p className="vertical-label font-nav-title text-heading-who-we-are font-bold leading-none tracking-[0.28em] whitespace-nowrap text-[#e57c62]">
             WHO WE ARE
-          </h2>
+          </p>
         </div>
 
-        <div className="flex w-full justify-center self-start">
+        <div className="flex w-full justify-center">
           <Badge />
         </div>
       </SiteContainer>

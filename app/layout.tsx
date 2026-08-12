@@ -1,5 +1,5 @@
 import { Fredoka, Bebas_Neue, Nunito_Sans, Inter, Rubik_Mono_One } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
@@ -38,6 +38,13 @@ export const metadata: Metadata = {
   title: "5-9 PLAY HAUS | Polymer Clay Workshops",
   description:
     "Polymer clay workshops hosted by Diem. Cozy ticketed events, corporate sessions, and private bookings.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f9f5eb",
 };
 
 export default function RootLayout({

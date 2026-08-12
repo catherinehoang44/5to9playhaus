@@ -65,10 +65,10 @@ function StepCard({
 export function EasySteps() {
   return (
     <section className="overflow-x-clip bg-[#cb513c]">
-      <SiteContainer className="flex min-w-0 items-end justify-start gap-6 px-4 py-16 sm:gap-10 sm:px-6 sm:py-20">
-        <h2 className="vertical-label shrink-0 font-nav-title text-heading-easy-steps font-bold leading-[0.84] tracking-[0.04em] text-[#fffaee] [-webkit-text-stroke:4px_#e57c62] [paint-order:stroke_fill]">
-          <span className="block">EASY</span>
-          <span className="block">STEPS</span>
+      <SiteContainer className="flex min-w-0 flex-col gap-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-20 lg:flex-row lg:items-end lg:justify-start">
+        <h2 className="font-nav-title text-heading-easy-steps font-bold leading-[0.9] tracking-[0.04em] text-[#fffaee] [-webkit-text-stroke:4px_#e57c62] [paint-order:stroke_fill] lg:vertical-label lg:shrink-0 lg:leading-[0.84]">
+          <span className="lg:block">EASY </span>
+          <span className="lg:block">STEPS</span>
         </h2>
 
         <div className="flex min-w-0 flex-1 flex-col items-stretch gap-8 sm:gap-10 md:flex-row md:items-start">

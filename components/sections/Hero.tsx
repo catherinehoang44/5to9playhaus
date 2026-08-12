@@ -25,12 +25,14 @@ function PrivacyBannerTitle() {
 }
 
 export function Hero({ variant = "home" }: HeroProps) {
+  const isPrivacy = variant === "privacy";
+
   return (
     <section
-      className="relative flex w-full flex-col items-center justify-center overflow-hidden"
+      className="relative flex w-full flex-col items-center justify-center overflow-hidden min-h-[220px] sm:min-h-[280px] md:min-h-0"
       style={{ aspectRatio: `${BANNER_ASPECT}`, backgroundColor: BANNER_BG }}
       aria-label={
-        variant === "privacy"
+        isPrivacy
           ? "Privacy and Refund Policy banner"
           : "5-9 PLAY HAUS banner"
       }
@@ -50,23 +52,42 @@ export function Hero({ variant = "home" }: HeroProps) {
         />
       </div>
 
-      <SiteContainer className="relative z-10 flex h-full min-h-0 w-full flex-1 items-stretch justify-between">
-        {variant === "privacy" ? (
-          <PrivacyBannerTitle />
+      <SiteContainer
+        className={`relative z-10 flex h-full min-h-0 w-full flex-1 items-stretch justify-between gap-2 sm:gap-4 ${
+          isPrivacy ? "px-4 sm:px-6" : ""
+        }`}
+      >
+        {isPrivacy ? (
+          <div className="mx-auto flex h-full w-full max-w-[1180px] items-stretch justify-between gap-2 sm:gap-4">
+            <PrivacyBannerTitle />
+            <div
+              className="h-full max-w-[55%] self-stretch"
+              role="img"
+              aria-label="Diem, workshop host"
+            >
+              <BannerDiem className="h-full" />
+            </div>
+          </div>
         ) : (
-          <CrispImage
-            src={assets.bannerLogo}
-            alt="5-9 PLAY HAUS — hosted by Diem"
-            width={466}
-            height={497}
-            fetchPriority="high"
-            className="h-full w-auto shrink-0"
-            style={{ aspectRatio: "466 / 497" }}
-          />
+          <>
+            <CrispImage
+              src={assets.bannerLogo}
+              alt="5-9 PLAY HAUS — hosted by Diem"
+              width={466}
+              height={497}
+              fetchPriority="high"
+              className="h-full w-auto max-w-[45%] object-contain object-left"
+              style={{ aspectRatio: "466 / 497" }}
+            />
+            <div
+              className="h-full max-w-[55%] self-stretch"
+              role="img"
+              aria-label="Diem, workshop host"
+            >
+              <BannerDiem className="h-full" />
+            </div>
+          </>
         )}
-        <div className="h-full shrink-0 self-stretch" role="img" aria-label="Diem, workshop host">
-          <BannerDiem className="h-full" />
-        </div>
       </SiteContainer>
     </section>
   );

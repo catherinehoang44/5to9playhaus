@@ -15,21 +15,22 @@
   --nav-height: calc(var(--grid-cell) * 3);
   --color-white: #ffffff;
   --color-text: #3d2c24;
+  --nav-height-mobile: 80px;
   --site-max-width: 1242px;
-  --section-gap: 160px;
-  --description-text-size: 18px;
+  --section-gap: clamp(64px, 10vw, 160px);
+  --description-text-size: clamp(15px, 0.8vw + 12px, 18px);
 
   /* Section / page headings — update sizes here */
-  --heading-who-we-are-label-size: 82px;
-  --heading-privacy-banner-size: 82px;
+  --heading-who-we-are-label-size: clamp(40px, 8.5vw, 82px);
+  --heading-privacy-banner-size: clamp(40px, 8.5vw, 82px);
   --heading-easy-steps-label-size: clamp(3rem, 6.7vw, 6rem);
-  --heading-main-title-size: 36px;
-  --heading-privacy-section-size: 36px;
-  --heading-nav-brand-size: 42px;
-  --heading-nav-brand-size-fluid: clamp(24px, 2.5vw + 1rem, 32px);
+  --heading-main-title-size: clamp(19px, 2.6vw + 8px, 36px);
+  --heading-privacy-section-size: clamp(19px, 2.6vw + 8px, 36px);
+  --heading-nav-brand-size: clamp(20px, 4.5vw, 42px);
+  --heading-nav-brand-size-fluid: clamp(20px, 2.5vw + 1rem, 32px);
 
   /* Who We Are — section padding below badge; bio scales with badge height (26px at 913px) */
-  --who-we-are-section-padding: 64px;
+  --who-we-are-section-padding: clamp(24px, 5vw, 64px);
   --badge-bio-font-size: 26px;
   --badge-bio-letter-spacing: 1px;
   --badge-bio-badge-height: 913px;
@@ -62,9 +63,15 @@
   --text-heading-nav-brand-fluid: var(--heading-nav-brand-size-fluid);
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   color: var(--color-text);
   font-family: var(--font-nunito), system-ui, sans-serif;
+  overflow-x: clip;
 }
 
 .site-container {
@@ -98,7 +105,13 @@ body {
 }
 
 .h-nav {
-  height: var(--nav-height);
+  height: var(--nav-height-mobile);
+}
+
+@media (min-width: 640px) {
+  .h-nav {
+    height: var(--nav-height);
+  }
 }
 
 .home-sections {
@@ -132,7 +145,7 @@ body {
   }
 }
 
-.vertical-label {
+@utility vertical-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);

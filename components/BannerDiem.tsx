@@ -62,78 +62,33 @@ function BannerLayer({
 
 function TrackingEye({
   eye,
-  frameRef,
+  gazeX,
+  gazeY,
 }: {
   eye: BannerDiemEye;
-  frameRef: React.RefObject<HTMLDivElement | null>;
+  gazeX: number;
+  gazeY: number;
 }) {
-  const pupilRef = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-
   const { pupil, star } = eye;
   const starLeft = ((star.x - pupil.x) / pupil.w) * 100;
   const starTop = ((star.y - pupil.y) / pupil.h) * 100;
   const starWidth = (star.w / pupil.w) * 100;
   const starHeight = (star.h / pupil.h) * 100;
 
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (prefersReducedMotion) return;
+  const maxX =
+    Math.max(0, (pupil.w - star.w) / 2) + star.w * STAR_MASK_OVERFLOW;
+  const maxY =
+    Math.max(0, (pupil.h - star.h) / 2) + star.h * STAR_MASK_OVERFLOW;
 
-    const onMove = (clientX: number, clientY: number) => {
-      const frame = frameRef.current;
-      const pupilEl = pupilRef.current;
-      if (!frame || !pupilEl) return;
-
-      const frameRect = frame.getBoundingClientRect();
-      const scale = frameRect.width / BANNER_DIEM_W;
-      const pupilRect = pupilEl.getBoundingClientRect();
-      const cx = pupilRect.left + pupilRect.width / 2;
-      const cy = pupilRect.top + pupilRect.height / 2;
-
-      const dx = clientX - cx;
-      const dy = clientY - cy;
-      const angle = Math.atan2(dy, dx);
-      const distance = Math.hypot(dx, dy);
-      const influence = Math.min(distance / (220 * scale), 1);
-
-      const maxX =
-        Math.max(0, (pupil.w - star.w) / 2) + star.w * STAR_MASK_OVERFLOW;
-      const maxY =
-        Math.max(0, (pupil.h - star.h) / 2) + star.h * STAR_MASK_OVERFLOW;
-
-      setOffset({
-        x: Math.cos(angle) * influence * maxX,
-        y: Math.sin(angle) * influence * maxY,
-      });
-    };
-
-    const handleMouseMove = (event: MouseEvent) => {
-      onMove(event.clientX, event.clientY);
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      if (touch) onMove(touch.clientX, touch.clientY);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, [frameRef, pupil.h, pupil.w, star.h, star.w]);
+  const translateX = (gazeX * maxX) / star.w * 100;
+  const translateY = (gazeY * maxY) / star.h * 100;
 
   return (
     <>
       {eye.underLayers.map((layer, index) => (
         <BannerLayer key={`${eye.id}-under-${index}`} layer={layer} />
       ))}
-      <div ref={pupilRef} className="absolute overflow-visible" style={layerStyle(pupil)}>
+      <div className="absolute overflow-visible" style={layerStyle(pupil)}>
         <CrispImage
           src={pupil.src}
           alt=""
@@ -151,12 +106,13 @@ function TrackingEye({
             alt=""
             width={Math.round(star.w)}
             height={Math.round(star.h)}
-            className="pointer-events-none absolute max-w-none transition-transform duration-100 ease-out"
+            className="pointer-events-none absolute max-w-none [transition:transform_180ms_cubic-bezier(0.22,1,0.36,1)] [will-change:transform]"
             style={{
-              left: `calc(${starLeft}% + ${(offset.x / pupil.w) * 100}%)`,
-              top: `calc(${starTop}% + ${(offset.y / pupil.h) * 100}%)`,
+              left: `${starLeft}%`,
+              top: `${starTop}%`,
               width: `${starWidth}%`,
               height: `${starHeight}%`,
+              transform: `translate3d(${translateX}%, ${translateY}%, 0)`,
             }}
             aria-hidden
           />
@@ -213,8 +169,98 @@ type BannerDiemProps = {
   className?: string;
 };
 
+/**
+ * Anchor for gaze direction — midpoint between the two pupils in layer coordinates.
+ * Deriving this from the shared eye data keeps the two stars visually locked to the
+ * same target instead of each drifting on its own vector.
+ */
+const GAZE_ANCHOR = (() => {
+  const [a, b] = bannerDiemEyes;
+  const ax = a.pupil.x + a.pupil.w / 2;
+  const ay = a.pupil.y + a.pupil.h / 2;
+  const bx = b.pupil.x + b.pupil.w / 2;
+  const by = b.pupil.y + b.pupil.h / 2;
+  return { x: (ax + bx) / 2, y: (ay + by) / 2 };
+})();
+
+/** How far the mouse must travel from the anchor before the stars pin to their extremes. */
+const GAZE_SATURATION_RADIUS = 520;
+
 export function BannerDiem({ className = "" }: BannerDiemProps) {
   const frameRef = useRef<HTMLDivElement>(null);
+  const [gaze, setGaze] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    let rafId = 0;
+    let pending: { x: number; y: number } | null = null;
+
+    const flush = () => {
+      rafId = 0;
+      const frame = frameRef.current;
+      const point = pending;
+      pending = null;
+      if (!frame || !point) return;
+
+      const rect = frame.getBoundingClientRect();
+      if (rect.width === 0) return;
+      const scale = rect.width / BANNER_DIEM_W;
+      const anchorX = rect.left + GAZE_ANCHOR.x * scale;
+      const anchorY = rect.top + GAZE_ANCHOR.y * scale;
+
+      const dx = point.x - anchorX;
+      const dy = point.y - anchorY;
+      const distance = Math.hypot(dx, dy);
+
+      /**
+       * Smooth radial falloff: `1 - 1/(1 + t)` reaches ~0.5 at t=1 and asymptotes to 1.
+       * The stars keep responding subtly even far from the character instead of pinning
+       * abruptly at a hard cutoff, which is what made the two eyes read as desynced.
+       */
+      const t = distance / (GAZE_SATURATION_RADIUS * scale);
+      const magnitude = distance === 0 ? 0 : 1 - 1 / (1 + t * 1.4);
+
+      setGaze({
+        x: (dx / (distance || 1)) * magnitude,
+        y: (dy / (distance || 1)) * magnitude,
+      });
+    };
+
+    const onMove = (clientX: number, clientY: number) => {
+      pending = { x: clientX, y: clientY };
+      if (!rafId) rafId = requestAnimationFrame(flush);
+    };
+
+    const handleMouseMove = (event: MouseEvent) =>
+      onMove(event.clientX, event.clientY);
+    const handleTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) onMove(touch.clientX, touch.clientY);
+    };
+    const handleMouseLeave = () => {
+      pending = null;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      setGaze({ x: 0, y: 0 });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    document.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   return (
     <div
@@ -231,7 +277,7 @@ export function BannerDiem({ className = "" }: BannerDiemProps) {
         <BannerLayer key={`base-after-${index}`} layer={layer} />
       ))}
       {bannerDiemEyes.map((eye) => (
-        <TrackingEye key={eye.id} eye={eye} frameRef={frameRef} />
+        <TrackingEye key={eye.id} eye={eye} gazeX={gaze.x} gazeY={gaze.y} />
       ))}
       {bannerDiemTopLayers.map((layer, index) => (
         <BannerLayer key={`top-${index}`} layer={layer} />

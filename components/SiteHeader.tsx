@@ -75,8 +75,11 @@ export function SiteHeader() {
           className="flex w-full min-w-0 items-center"
         >
           {isCompact ? (
-            <div className="flex w-full min-w-0 items-center justify-between gap-4">
-              <NavCenterTitle align="left" className="min-w-0 truncate" />
+            <div className="flex w-full min-w-0 items-center justify-between gap-3 sm:gap-4">
+              <NavCenterTitle
+                align="left"
+                className="min-w-0 leading-[1.05]"
+              />
               <CtaLink
                 href="#book"
                 label="Book Now"
