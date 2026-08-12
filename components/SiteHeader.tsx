@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { CtaLink } from "@/components/CtaLink";
 import { NavCenterTitle } from "@/components/NavCenterTitle";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 function NavDivider() {
   return (
@@ -18,10 +19,10 @@ function NavDivider() {
 function NavExpandedMeasure() {
   return (
     <>
-      <CtaLink href="#book" label="Book Now" icon="calendar" />
+      <CtaLink href={CONTACT_MAILTO} label="Book Now" icon="calendar" />
       <NavCenterTitle align="center" className="shrink-0" />
       <CtaLink
-        href="#inquire"
+        href={CONTACT_MAILTO}
         label="Inquire"
         icon="mail"
         iconPosition="right"
@@ -81,7 +82,7 @@ export function SiteHeader() {
                 className="min-w-0 leading-[1.05]"
               />
               <CtaLink
-                href="#book"
+                href={CONTACT_MAILTO}
                 label="Book Now"
                 icon="calendar"
                 className="shrink-0"
@@ -89,12 +90,12 @@ export function SiteHeader() {
             </div>
           ) : (
             <div className="flex w-full min-w-0 items-center gap-6">
-              <CtaLink href="#book" label="Book Now" icon="calendar" />
+              <CtaLink href={CONTACT_MAILTO} label="Book Now" icon="calendar" />
               <NavDivider />
               <NavCenterTitle align="center" className="shrink-0" />
               <NavDivider />
               <CtaLink
-                href="#inquire"
+                href={CONTACT_MAILTO}
                 label="Inquire"
                 icon="mail"
                 iconPosition="right"

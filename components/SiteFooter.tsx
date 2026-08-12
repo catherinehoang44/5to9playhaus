@@ -1,15 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CrispImage } from "@/components/CrispImage";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
+import { CONTACT_MAILTO } from "@/lib/contact";
+
+const INSTAGRAM_URL = "https://www.instagram.com/5to9playhaus/";
 
 const footerLinks = [
   { href: "/", label: "Home" },
   { href: "/privacy", label: "Privacy & Refund Policy" },
-  { href: "#contact", label: "Contact" },
+  { href: CONTACT_MAILTO, label: "Contact" },
 ] as const;
 
 export function SiteFooter() {
+  const pathname = usePathname();
+
   return (
     <footer className="mt-[var(--section-gap)] flex min-h-[220px] flex-col items-center justify-center border-t-8 border-[#cb513c] bg-[#e68925] py-10 sm:min-h-[286px] sm:py-14">
       <SiteContainer className="flex w-full flex-col items-center gap-6 px-4 sm:gap-[42px] sm:px-6">
@@ -21,17 +29,21 @@ export function SiteFooter() {
           aria-label="Footer"
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
         >
-          {footerLinks.map(({ href, label }) => (
-            <Link
-              key={label}
-              href={href}
-              className="font-nav-cta text-[15px] font-normal leading-none text-nav-brown underline sm:text-[16px]"
-            >
-              {label}
-            </Link>
-          ))}
-          <Link
-            href="#"
+          {footerLinks
+            .filter(({ href }) => href !== pathname)
+            .map(({ href, label }) => (
+              <Link
+                key={label}
+                href={href}
+                className="font-nav-cta text-[15px] font-normal leading-none text-nav-brown underline sm:text-[16px]"
+              >
+                {label}
+              </Link>
+            ))}
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             aria-label="Instagram"
             className="inline-flex shrink-0 hover:opacity-80"
           >
@@ -43,7 +55,7 @@ export function SiteFooter() {
               className="size-5"
               aria-hidden
             />
-          </Link>
+          </a>
         </nav>
       </SiteContainer>
     </footer>

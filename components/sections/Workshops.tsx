@@ -2,6 +2,7 @@ import { CrispFillImage, CrispImage } from "@/components/CrispImage";
 import { CtaLink } from "@/components/CtaLink";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 /** Figma workshop image frame at 1242px: 642 × 390 */
 const WORKSHOP_IMAGE_ASPECT = 642 / 390;
@@ -66,7 +67,7 @@ const workshops: WorkshopTemplateProps[] = [
     title: ["Cozy", "Workshops"],
     description:
       "These are reoccurring ticketed events! Come alone or with a friend for warm lighting, a cup of something hot, and everything you need to make your own clay figurine in 3 hours!",
-    cta: { href: "#book", label: "Book Now", icon: "calendar" },
+    cta: { href: CONTACT_MAILTO, label: "Book Now", icon: "calendar" },
     image: assets.workshopCozy,
     alt: "People crafting at a cozy workshop table",
   },
@@ -81,7 +82,7 @@ const workshops: WorkshopTemplateProps[] = [
         </p>
       </>
     ),
-    cta: { href: "#inquire", label: "Inquire", icon: "mail" },
+    cta: { href: CONTACT_MAILTO, label: "Inquire", icon: "mail" },
     image: assets.workshopCorporate,
     alt: "Corporate team at a workshop",
   },
@@ -89,7 +90,7 @@ const workshops: WorkshopTemplateProps[] = [
     title: ["Private", "Bookings"],
     description:
       "Birthday parties, weddings, just-for-funzies, you name it! If you want a private clay figurine workshop for your group or event, please reach out!",
-    cta: { href: "#inquire", label: "Inquire", icon: "mail" },
+    cta: { href: CONTACT_MAILTO, label: "Inquire", icon: "mail" },
     image: assets.workshopPrivate,
     alt: "Large group posing together at a private workshop",
   },

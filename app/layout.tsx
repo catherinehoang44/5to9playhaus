@@ -35,9 +35,34 @@ const rubikMonoOne = Rubik_Mono_One({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://5to9playhaus.com"),
   title: "5-9 PLAY HAUS | Polymer Clay Workshops",
   description:
     "Polymer clay workshops hosted by Diem. Cozy ticketed events, corporate sessions, and private bookings.",
+  applicationName: "5-9 PLAY HAUS",
+  openGraph: {
+    type: "website",
+    locale: "en_CA",
+    siteName: "5-9 PLAY HAUS",
+    title: "5-9 PLAY HAUS | Polymer Clay Workshops",
+    description:
+      "Polymer clay workshops hosted by Diem. Cozy ticketed events, corporate sessions, and private bookings.",
+    images: [
+      {
+        url: "/og.png",
+        width: 720,
+        height: 720,
+        alt: "5-9 PLAY HAUS logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "5-9 PLAY HAUS | Polymer Clay Workshops",
+    description:
+      "Polymer clay workshops hosted by Diem. Cozy ticketed events, corporate sessions, and private bookings.",
+    images: ["/og.png"],
+  },
 };
 
 export const viewport: Viewport = {
