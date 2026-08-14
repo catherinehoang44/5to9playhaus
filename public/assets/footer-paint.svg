@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" fill="none">
+  <!-- paint blobs -->
+  <circle cx="24" cy="42" r="10" fill="#d8c648"/>
+  <circle cx="18" cy="58" r="6" fill="#7fa691"/>
+  <circle cx="178" cy="188" r="8" fill="#e57c62"/>
+  <circle cx="188" cy="204" r="5" fill="#dea242"/>
+
+  <!-- base -->
+  <ellipse cx="86" cy="206" rx="48" ry="12" fill="#dea242"/>
+  <ellipse cx="86" cy="202" rx="40" ry="8" fill="#d8c648"/>
+
+  <!-- figurine body -->
+  <path fill="#7fa691" d="M62 148c-4 20 2 40 24 46 22 6 40-6 44-26 4-18-8-36-24-42-18-6-40 4-44 22Z"/>
+  <path fill="#fffaee" d="M78 146h16v10c0 4-4 8-8 8s-8-4-8-8v-10Z"/>
+  <path fill="#563529" d="M70 188c2 10 10 16 24 16 14 0 22-6 24-16-8 4-16 6-24 6s-16-2-24-6Z"/>
+
+  <!-- head -->
+  <circle cx="88" cy="108" r="42" fill="#f5d0b0"/>
+  <ellipse cx="78" cy="96" rx="16" ry="10" fill="#ffd8b8"/>
+  <!-- hair -->
+  <path fill="#563529" d="M50 92c2-28 24-44 48-40 22 4 36 24 36 44 0 8-6 12-12 8-4-20-16-28-28-28-14 0-28 10-32 28-4 2-12 0-12-12Z"/>
+  <ellipse cx="62" cy="78" rx="14" ry="12" fill="#563529"/>
+  <ellipse cx="112" cy="76" rx="13" ry="11" fill="#563529"/>
+  <!-- eyes -->
+  <circle cx="74" cy="112" r="11" fill="#563529"/>
+  <circle cx="102" cy="110" r="11" fill="#563529"/>
+  <path fill="#d8c648" d="M74 106l3 7 7 2-7 3-2 7-3-7-7-2 7-3 2-7Z"/>
+  <circle cx="106" cy="107" r="3" fill="#fffaee"/>
+  <!-- smile -->
+  <path fill="#fffaee" d="M78 128c4 8 16 8 20 0-6 2-14 2-20 0Z"/>
+
+  <!-- brush hand -->
+  <path fill="#e57c62" d="M132 48c8-18 28-24 42-14 6 4 10 12 8 20L148 154c-2 8-10 12-18 10l-8-2c-8-2-12-10-10-18L132 48Z"/>
+  <path fill="#fffaee" d="M138 142c6 2 12-2 14-8 4-10 18-48 22-62 2-6-2-8-6-6-8 12-22 50-26 62-2 6 0 12-4 14Z"/>
+  <path fill="#fffaee" d="M154 148l8 4c2 8-2 14-10 16-4-6-4-12 2-20Z"/>
+  <!-- hand -->
+  <path fill="#f5d0b0" d="M118 96c16-10 38-6 46 10 8 14 4 32-10 40-14 8-34 4-44-10-8-12-6-30 8-40Z"/>
+  <rect x="148" y="92" width="12" height="9" rx="4.5" fill="#e57c62" transform="rotate(24 154 96)"/>
+  <rect x="136" y="86" width="12" height="9" rx="4.5" fill="#d8c648" transform="rotate(18 142 90)"/>
+  <rect x="126" y="90" width="11" height="8" rx="4" fill="#7fa691" transform="rotate(10 131 94)"/>
+</svg>

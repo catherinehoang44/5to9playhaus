@@ -11,6 +11,8 @@ export type BannerDiemLayer = {
   w: number;
   h: number;
   className?: string;
+  /** Vertical “DIEM” name beside the character */
+  isNameLabel?: boolean;
 };
 
 export type BannerDiemEye = {
@@ -44,7 +46,7 @@ export const bannerDiemMouth: BannerDiemMouth = {
 export const bannerDiemBaseLayersBeforeMouth: BannerDiemLayer[] = [
   { src: asset("layer-01.svg"), x: 24, y: 24, w: 537.47, h: 516.74 },
   { src: asset("layer-02.svg"), x: 0, y: 0, w: 585.47, h: 585.08 },
-  { src: asset("layer-03.svg"), x: 522, y: 34.64, w: 102.87, h: 451.67 },
+  { src: asset("layer-03.svg"), x: 522, y: 34.64, w: 102.87, h: 451.67, isNameLabel: true },
   { src: asset("layer-04.svg"), x: 26.5, y: 26.5, w: 532.47, h: 505.24 },
   { src: asset("layer-05.svg"), x: 24, y: 24, w: 537.47, h: 510.24 },
   { src: asset("layer-06.svg"), x: 169.78, y: 461.24, w: 166.5, h: 20 },

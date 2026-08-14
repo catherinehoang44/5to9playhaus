@@ -66,7 +66,7 @@ export function EasySteps() {
   return (
     <section className="overflow-x-clip bg-[#cb513c]">
       <SiteContainer className="flex min-w-0 flex-col gap-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-20 lg:flex-row lg:items-end lg:justify-start">
-        <h2 className="font-nav-title text-heading-easy-steps font-bold leading-[0.9] tracking-[0.04em] text-[#fffaee] [-webkit-text-stroke:4px_#e57c62] [paint-order:stroke_fill] lg:vertical-label lg:shrink-0 lg:leading-[0.84]">
+        <h2 className="font-nav-title text-heading-easy-steps font-bold uppercase leading-[0.9] text-[#fffaee] [-webkit-text-stroke:4px_#e57c62] [paint-order:stroke_fill] lg:vertical-label lg:shrink-0 lg:leading-[0.84]">
           <span className="lg:block">EASY </span>
           <span className="lg:block">STEPS</span>
         </h2>

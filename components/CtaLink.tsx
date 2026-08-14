@@ -7,6 +7,7 @@ type CtaLinkProps = {
   label: string;
   icon: "calendar" | "mail";
   iconPosition?: "left" | "right";
+  iconOnly?: boolean;
   className?: string;
 };
 
@@ -15,6 +16,7 @@ export function CtaLink({
   label,
   icon,
   iconPosition = "left",
+  iconOnly = false,
   className = "",
 }: CtaLinkProps) {
   const iconSrc =
@@ -38,14 +40,17 @@ export function CtaLink({
   return (
     <Link
       href={href}
-      className={`cta-link relative isolate inline-flex w-fit shrink-0 items-center gap-2 overflow-hidden px-2 py-0 ${className}`.trim()}
+      aria-label={iconOnly ? label : undefined}
+      className={`cta-link relative isolate flex h-full w-fit shrink-0 items-center justify-center overflow-hidden px-2 py-0 font-nav-cta text-description font-bold uppercase leading-normal min-h-[1lh] ${iconOnly ? "" : "gap-2"} ${className}`.trim()}
     >
       <span className="cta-highlight" aria-hidden />
-      {iconPosition === "left" && iconEl}
-      <span className="relative font-nav-cta text-description font-bold uppercase leading-normal whitespace-nowrap text-nav-brown">
-        {label}
-      </span>
-      {iconPosition === "right" && iconEl}
+      {(iconOnly || iconPosition === "left") && iconEl}
+      {iconOnly ? null : (
+        <span className="relative whitespace-nowrap text-nav-brown">
+          {label}
+        </span>
+      )}
+      {!iconOnly && iconPosition === "right" && iconEl}
     </Link>
   );
 }

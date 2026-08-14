@@ -1,66 +1,12 @@
-import { CrispFillImage, CrispImage } from "@/components/CrispImage";
+import { CrispFillImage } from "@/components/CrispImage";
 import { CtaLink } from "@/components/CtaLink";
+import { WaveDivider } from "@/components/ScallopEdge";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
 import { CONTACT_MAILTO } from "@/lib/contact";
 
 /** Figma workshop image frame at 1242px: 642 × 390 */
 const WORKSHOP_IMAGE_ASPECT = 642 / 390;
-
-type WorkshopTemplateProps = {
-  title: [string, string];
-  description: React.ReactNode;
-  cta: { href: string; label: string; icon: "calendar" | "mail" };
-  image: string;
-  alt: string;
-};
-
-function WorkshopTemplate({
-  title,
-  description,
-  cta,
-  image,
-  alt,
-}: WorkshopTemplateProps) {
-  return (
-    <article className="flex w-full flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-[210px]">
-      <div className="flex w-full flex-col items-start gap-6 lg:max-w-[390px] lg:shrink-0">
-        <h3 className="w-full text-left font-nav-title text-heading-workshop-title font-bold leading-none text-nav-brown">
-          <span className="block">{title[0]}</span>
-          <span className="block">{title[1]}</span>
-        </h3>
-
-        <CrispImage
-          src={assets.workshopDivider}
-          alt=""
-          width={390}
-          height={1}
-          className="h-px w-full"
-          aria-hidden
-        />
-
-        <div className="w-full text-left font-workshop-body text-description font-medium leading-[1.2] tracking-[0.36px] text-nav-brown">
-          {description}
-        </div>
-
-        <CtaLink {...cta} />
-      </div>
-
-      <div className="w-full min-w-0 flex-1">
-        <div
-          className="relative w-full overflow-hidden rounded-lg"
-          style={{ aspectRatio: `${WORKSHOP_IMAGE_ASPECT}` }}
-        >
-          <CrispFillImage src={image} alt={alt} className="object-cover" />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-lg shadow-[inset_0_0_0_5px_#7fa691]"
-          />
-        </div>
-      </div>
-    </article>
-  );
-}
 
 const workshops: WorkshopTemplateProps[] = [
   {
@@ -95,6 +41,69 @@ const workshops: WorkshopTemplateProps[] = [
     alt: "Large group posing together at a private workshop",
   },
 ];
+
+const workshopTitleLines = [
+  ...new Set(workshops.flatMap((workshop) => workshop.title)),
+];
+
+type WorkshopTemplateProps = {
+  title: [string, string];
+  description: React.ReactNode;
+  cta: { href: string; label: string; icon: "calendar" | "mail" };
+  image: string;
+  alt: string;
+};
+
+function WorkshopTemplate({
+  title,
+  description,
+  cta,
+  image,
+  alt,
+}: WorkshopTemplateProps) {
+  return (
+    <article className="flex w-full flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-[210px]">
+      <div className="flex w-full flex-col items-start gap-6 lg:max-w-[390px] lg:shrink-0">
+        <div className="flex w-fit max-w-full flex-col items-stretch gap-6">
+          <div>
+            <div
+              className="h-0 overflow-hidden whitespace-nowrap font-nav-title text-heading-workshop-title font-bold uppercase leading-none"
+              aria-hidden
+            >
+              {workshopTitleLines.map((line) => (
+                <div key={line}>{line}</div>
+              ))}
+            </div>
+            <h3 className="text-left font-nav-title text-heading-workshop-title font-bold uppercase leading-none text-nav-brown">
+              <span className="block">{title[0]}</span>
+              <span className="block">{title[1]}</span>
+            </h3>
+          </div>
+          <WaveDivider className="w-full" color="#563529" />
+        </div>
+
+        <div className="w-full text-left font-workshop-body text-description font-medium leading-[1.2] tracking-[0.36px] text-nav-brown">
+          {description}
+        </div>
+
+        <CtaLink {...cta} />
+      </div>
+
+      <div className="w-full min-w-0 flex-1">
+        <div
+          className="relative w-full overflow-hidden rounded-lg"
+          style={{ aspectRatio: `${WORKSHOP_IMAGE_ASPECT}` }}
+        >
+          <CrispFillImage src={image} alt={alt} className="object-cover" />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-lg shadow-[inset_0_0_0_5px_#7fa691]"
+          />
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export function Workshops() {
   return (

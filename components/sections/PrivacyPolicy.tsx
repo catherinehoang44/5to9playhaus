@@ -1,19 +1,9 @@
-import { CrispImage } from "@/components/CrispImage";
+import { WaveDivider } from "@/components/ScallopEdge";
 import { SiteContainer } from "@/components/SiteContainer";
-import { assets } from "@/lib/assets";
 import { privacyBlocks, type PrivacyBlock } from "@/lib/privacy-policy";
 
 function PolicyDivider() {
-  return (
-    <CrispImage
-      src={assets.privacyDivider}
-      alt=""
-      width={1180}
-      height={1}
-      className="h-px w-full"
-      aria-hidden
-    />
-  );
+  return <WaveDivider className="w-full" color="#563529" />;
 }
 
 function PolicyBlock({ block, isFirst }: { block: PrivacyBlock; isFirst: boolean }) {
@@ -21,7 +11,7 @@ function PolicyBlock({ block, isFirst }: { block: PrivacyBlock; isFirst: boolean
     case "heading":
       return (
         <h2
-          className={`font-workshop-body text-heading-privacy-section font-medium leading-none text-black ${
+          className={`font-nav-title text-heading-privacy-section font-bold uppercase leading-none text-black ${
             isFirst ? "" : "mt-[150px]"
           }`}
         >

@@ -15,6 +15,10 @@ const LOGO_IMG_H = 497;
 const DIEM_X = 608;
 const DIEM_W = 634;
 
+/** Vertical padding on the title slot for text-header banners (privacy, etc.). */
+const TEXT_BANNER_PAD =
+  "flex min-w-0 items-center py-8 sm:py-10 lg:py-12";
+
 type HeroProps = {
   variant?: "home" | "privacy";
 };
@@ -22,39 +26,13 @@ type HeroProps = {
 function PrivacyBannerTitle({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`flex min-w-0 w-full flex-col justify-center font-nav-title text-heading-privacy-banner font-bold leading-none text-white ${className}`.trim()}
+      className={`flex min-w-0 w-full flex-col justify-center font-nav-title text-heading-privacy-banner font-bold uppercase leading-none text-white ${className}`.trim()}
       aria-label="Privacy and Refund Policy"
     >
       <span className="block">Privacy</span>
       <span className="block">& Refund</span>
       <span className="block">Policy</span>
     </div>
-  );
-}
-
-function BannerLead({
-  variant,
-  layout,
-}: {
-  variant: NonNullable<HeroProps["variant"]>;
-  layout: "mobile" | "desktop";
-}) {
-  if (variant === "privacy") {
-    return (
-      <PrivacyBannerTitle
-        className={layout === "desktop" ? "h-full" : "h-auto"}
-      />
-    );
-  }
-
-  if (layout === "mobile") {
-    return (
-      <BannerLogo className="h-full w-full object-contain" />
-    );
-  }
-
-  return (
-    <BannerLogo className="h-full w-full object-contain object-left" />
   );
 }
 
@@ -75,9 +53,11 @@ function BannerLogo({ className }: { className?: string }) {
 function DiemFrame({
   className,
   style,
+  hideName = false,
 }: {
   className?: string;
   style?: React.CSSProperties;
+  hideName?: boolean;
 }) {
   return (
     <div
@@ -86,20 +66,101 @@ function DiemFrame({
       role="img"
       aria-label="Diem, workshop host"
     >
-      <BannerDiem />
+      <BannerDiem hideName={hideName} />
     </div>
   );
 }
 
+function LogoBanner() {
+  return (
+    <>
+      {/* Mobile: logo stacked above Diem. Diem keeps 634×525. Banner height hugs. */}
+      <div className="flex w-full flex-col md:hidden">
+        <div
+          className="w-full overflow-hidden"
+          style={{ aspectRatio: `${LOGO_IMG_W} / ${LOGO_IMG_H}` }}
+        >
+          <BannerLogo className="h-full w-full object-contain" />
+        </div>
+        <DiemFrame
+          className="relative w-full"
+          style={{ aspectRatio: `${BANNER_DIEM_W} / ${BANNER_DIEM_H}` }}
+        />
+      </div>
+
+      {/* Desktop/tablet: Figma Frame 45 (1242×525), Diem aspect-locked. */}
+      <div
+        className="relative hidden w-full md:block"
+        style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
+      >
+        <div
+          className="absolute top-0 left-0 h-full min-w-0"
+          style={{ width: `${(LOGO_W / FRAME_W) * 100}%` }}
+        >
+          <BannerLogo className="h-full w-full object-contain object-left" />
+        </div>
+        <DiemFrame
+          className="absolute top-0"
+          style={{
+            left: `${(DIEM_X / FRAME_W) * 100}%`,
+            width: `${(DIEM_W / FRAME_W) * 100}%`,
+            aspectRatio: `${BANNER_DIEM_W} / ${BANNER_DIEM_H}`,
+          }}
+        />
+      </div>
+    </>
+  );
+}
+
+function TextBanner() {
+  return (
+    <>
+      {/* Mobile/tablet: title + Diem in a row. Title has padding; Diem scales. */}
+      <div className="flex w-full items-stretch gap-3 sm:gap-4 lg:hidden">
+        <div className={`flex-1 ${TEXT_BANNER_PAD}`}>
+          <PrivacyBannerTitle />
+        </div>
+        <DiemFrame
+          hideName
+          className="relative w-[46%] shrink-0 self-end sm:w-[48%]"
+          style={{ aspectRatio: `${BANNER_DIEM_W} / ${BANNER_DIEM_H}` }}
+        />
+      </div>
+
+      {/* Desktop: Figma Frame 45, title slot padded. */}
+      <div
+        className="relative hidden w-full lg:block"
+        style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
+      >
+        <div
+          className={`absolute top-0 left-0 h-full ${TEXT_BANNER_PAD}`}
+          style={{ width: `${(LOGO_W / FRAME_W) * 100}%` }}
+        >
+          <PrivacyBannerTitle />
+        </div>
+        <DiemFrame
+          hideName
+          className="absolute top-0"
+          style={{
+            left: `${(DIEM_X / FRAME_W) * 100}%`,
+            width: `${(DIEM_W / FRAME_W) * 100}%`,
+            aspectRatio: `${BANNER_DIEM_W} / ${BANNER_DIEM_H}`,
+          }}
+        />
+      </div>
+    </>
+  );
+}
+
 export function Hero({ variant = "home" }: HeroProps) {
-  const isPrivacy = variant === "privacy";
+  const isTextBanner = variant === "privacy";
 
   return (
     <section
       className="relative w-full overflow-hidden"
       style={{ backgroundColor: BANNER_BG }}
       aria-label={
-        isPrivacy
+        isTextBanner
           ? "Privacy and Refund Policy banner"
           : "5-9 PLAY HAUS banner"
       }
@@ -120,48 +181,7 @@ export function Hero({ variant = "home" }: HeroProps) {
       </div>
 
       <SiteContainer className="relative z-10 px-3 md:px-6">
-        {/* Mobile: lead stacked above Diem. Diem keeps 634×525. Banner height hugs. */}
-        <div className="flex w-full flex-col md:hidden">
-          <div
-            className={
-              isPrivacy
-                ? "flex w-full items-center py-8"
-                : "w-full overflow-hidden"
-            }
-            style={
-              isPrivacy
-                ? undefined
-                : { aspectRatio: `${LOGO_IMG_W} / ${LOGO_IMG_H}` }
-            }
-          >
-            <BannerLead variant={variant} layout="mobile" />
-          </div>
-          <DiemFrame
-            className="relative w-full"
-            style={{ aspectRatio: `${BANNER_DIEM_W} / ${BANNER_DIEM_H}` }}
-          />
-        </div>
-
-        {/* Desktop/tablet: Figma Frame 45 (1242×525), Diem aspect-locked. */}
-        <div
-          className="relative hidden w-full md:block"
-          style={{ aspectRatio: `${FRAME_W} / ${FRAME_H}` }}
-        >
-          <div
-            className="absolute top-0 left-0 h-full min-w-0"
-            style={{ width: `${(LOGO_W / FRAME_W) * 100}%` }}
-          >
-            <BannerLead variant={variant} layout="desktop" />
-          </div>
-          <DiemFrame
-            className="absolute top-0"
-            style={{
-              left: `${(DIEM_X / FRAME_W) * 100}%`,
-              width: `${(DIEM_W / FRAME_W) * 100}%`,
-              aspectRatio: `${BANNER_DIEM_W} / ${BANNER_DIEM_H}`,
-            }}
-          />
-        </div>
+        {isTextBanner ? <TextBanner /> : <LogoBanner />}
       </SiteContainer>
     </section>
   );

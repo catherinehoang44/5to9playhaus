@@ -12,10 +12,9 @@
   --grid-line: #fbeee2;
   --grid-line-width: 4px;
   --grid-cell: 40px;
-  --nav-height: calc(var(--grid-cell) * 3);
+  --nav-height: calc(var(--grid-cell) * 2);
   --color-white: #ffffff;
   --color-text: #3d2c24;
-  --nav-height-mobile: 80px;
   --site-max-width: 1242px;
   --section-gap: clamp(64px, 10vw, 160px);
   --description-text-size: clamp(15px, 0.8vw + 12px, 18px);
@@ -35,6 +34,16 @@
   --badge-bio-font-size: 26px;
   --badge-bio-letter-spacing: 1px;
   --badge-bio-badge-height: 913px;
+  --divider-thickness: 2px;
+  --cta-radius: 2px;
+
+}
+
+/* Workshops stay stacked until lg, so tablet needs a larger title than the 36px cap. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --heading-workshop-title-size: clamp(44px, 6.5vw, 58px);
+  }
 }
 
 @theme inline {
@@ -49,7 +58,7 @@
   --font-label: var(--font-bebas), system-ui, sans-serif;
   --font-body: var(--font-nunito), system-ui, sans-serif;
   --font-nav-cta: var(--font-inter), system-ui, sans-serif;
-  --font-nav-title: Hanson, var(--font-bebas), system-ui, sans-serif;
+  --font-nav-title: var(--font-bebas), system-ui, sans-serif;
   --font-who-we-are: var(--font-inter), system-ui, sans-serif;
   --font-workshop-body: var(--font-inter), system-ui, sans-serif;
   --font-nav-brand: var(--font-rubik-mono), ui-monospace, monospace;
@@ -84,14 +93,6 @@ body {
   margin-right: auto;
 }
 
-@font-face {
-  font-family: Hanson;
-  src: url("/fonts/Hanson-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 .bg-grid {
   background-color: var(--color-cream);
   background-image:
@@ -108,13 +109,7 @@ body {
 }
 
 .h-nav {
-  height: var(--nav-height-mobile);
-}
-
-@media (min-width: 640px) {
-  .h-nav {
-    height: var(--nav-height);
-  }
+  height: var(--nav-height);
 }
 
 .home-sections {
@@ -152,79 +147,9 @@ body {
 
 .badge-tilt {
   /* Size container for cqh bio type — keep this off the overflow root so
-     layout containment doesn't clip the hover tilt left/right. */
+     layout containment doesn't clip the hanging badge. */
   container-type: size;
-  transform-origin: 50% 0%;
-  transform-style: preserve-3d;
-  transition:
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   filter: drop-shadow(0 10px 16px rgba(80, 22, 12, 0.18));
-}
-
-.badge-can-tilt:hover .badge-tilt {
-  filter: drop-shadow(calc(var(--tilt-px, 0) * -22px) 18px 26px rgba(80, 22, 12, 0.32));
-}
-
-.badge-shine {
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.badge-can-tilt:hover .badge-shine {
-  opacity: 1;
-}
-
-.badge-shine-holder {
-  background:
-    radial-gradient(
-      90% 70% at var(--shine-x, 42%) var(--shine-y, 28%),
-      rgba(255, 255, 255, 0.38) 0%,
-      rgba(255, 255, 255, 0.08) 32%,
-      transparent 58%
-    ),
-    linear-gradient(
-      118deg,
-      transparent 36%,
-      rgba(255, 255, 255, 0.22) 47%,
-      rgba(255, 255, 255, 0.05) 51%,
-      transparent 64%
-    );
-  mix-blend-mode: soft-light;
-}
-
-.badge-shine-card {
-  border-radius: inherit;
-  background:
-    radial-gradient(
-      85% 70% at var(--shine-x, 42%) var(--shine-y, 28%),
-      rgba(255, 255, 255, 0.72) 0%,
-      rgba(255, 255, 255, 0.18) 26%,
-      transparent 55%
-    );
-  mix-blend-mode: soft-light;
-}
-
-.badge-shine-card::after {
-  content: "";
-  position: absolute;
-  inset: -30%;
-  background: linear-gradient(
-    118deg,
-    transparent 38%,
-    rgba(255, 255, 255, 0.55) 48.5%,
-    rgba(255, 248, 230, 0.18) 51%,
-    transparent 62%
-  );
-  transform: translate3d(
-    calc((var(--shine-x, 50%) - 50%) * 0.7),
-    calc((var(--shine-y, 30%) - 50%) * 0.45),
-    0
-  );
-  mix-blend-mode: overlay;
 }
 
 .badge-card-glaze {
@@ -233,8 +158,19 @@ body {
     inset 0 -10px 18px rgba(80, 20, 10, 0.06);
 }
 
+.badge-card-grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
 .cta-link {
   color: var(--color-nav-brown);
+  border-radius: var(--cta-radius);
 }
 
 .cta-link img {
@@ -246,6 +182,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: -1;
+  border-radius: var(--cta-radius);
   background-color: var(--color-nav-mustard);
   transform: scaleX(1);
   transform-origin: left center;
@@ -286,15 +223,8 @@ body {
   }
 
   .badge-tilt {
-    transition: none;
-  }
-
-  .badge-can-tilt:hover .badge-shine {
-    opacity: 0.45;
-  }
-
-  .badge-shine-card::after {
     transform: none;
+    transition: none;
   }
 }
 

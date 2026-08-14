@@ -161,7 +161,13 @@ function MaskedMouth() {
 
 type BannerDiemProps = {
   className?: string;
+  /** Hide the vertical DIEM label and slide the character into that space. */
+  hideName?: boolean;
 };
+
+/** Right edge of the character silhouette (layer-02), used to flush right when the name is hidden. */
+const CHAR_RIGHT = 585.47;
+const NAME_SHIFT = `${((BANNER_DIEM_W - CHAR_RIGHT) / BANNER_DIEM_W) * 100}%`;
 
 /**
  * Anchor for gaze direction — midpoint between the two pupils in layer coordinates.
@@ -180,7 +186,7 @@ const GAZE_ANCHOR = (() => {
 /** How far the mouse must travel from the anchor before the stars pin to their extremes. */
 const GAZE_SATURATION_RADIUS = 520;
 
-export function BannerDiem({ className = "" }: BannerDiemProps) {
+export function BannerDiem({ className = "", hideName = false }: BannerDiemProps) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [gaze, setGaze] = useState({ x: 0, y: 0 });
 
@@ -263,19 +269,26 @@ export function BannerDiem({ className = "" }: BannerDiemProps) {
       style={{ aspectRatio: `${BANNER_DIEM_W} / ${BANNER_DIEM_H}` }}
       aria-hidden
     >
-      {bannerDiemBaseLayersBeforeMouth.map((layer, index) => (
-        <BannerLayer key={`base-before-${index}`} layer={layer} />
-      ))}
-      <MaskedMouth />
-      {bannerDiemBaseLayersAfterMouth.map((layer, index) => (
-        <BannerLayer key={`base-after-${index}`} layer={layer} />
-      ))}
-      {bannerDiemEyes.map((eye) => (
-        <TrackingEye key={eye.id} eye={eye} gazeX={gaze.x} gazeY={gaze.y} />
-      ))}
-      {bannerDiemTopLayers.map((layer, index) => (
-        <BannerLayer key={`top-${index}`} layer={layer} />
-      ))}
+      <div
+        className="absolute inset-0"
+        style={hideName ? { transform: `translateX(${NAME_SHIFT})` } : undefined}
+      >
+        {bannerDiemBaseLayersBeforeMouth
+          .filter((layer) => !(hideName && layer.isNameLabel))
+          .map((layer, index) => (
+            <BannerLayer key={`base-before-${index}`} layer={layer} />
+          ))}
+        <MaskedMouth />
+        {bannerDiemBaseLayersAfterMouth.map((layer, index) => (
+          <BannerLayer key={`base-after-${index}`} layer={layer} />
+        ))}
+        {bannerDiemEyes.map((eye) => (
+          <TrackingEye key={eye.id} eye={eye} gazeX={gaze.x} gazeY={gaze.y} />
+        ))}
+        {bannerDiemTopLayers.map((layer, index) => (
+          <BannerLayer key={`top-${index}`} layer={layer} />
+        ))}
+      </div>
     </div>
   );
 }

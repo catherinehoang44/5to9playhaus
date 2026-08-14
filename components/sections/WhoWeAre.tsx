@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatedFigurine } from "@/components/AnimatedFigurine";
 import { CrispFillImage, CrispImage } from "@/components/CrispImage";
 import { SiteContainer } from "@/components/SiteContainer";
@@ -150,19 +150,9 @@ function BadgeHanging() {
         />
       </div>
 
-      <div
-        className="pointer-events-none badge-shine badge-shine-holder absolute left-0 z-[25]"
-        style={{
-          top: `${(BADGE_FRAME_TOP / BADGE_H) * 100}%`,
-          height: `${(BADGE_FRAME_H / BADGE_H) * 100}%`,
-          width: "100%",
-        }}
-        aria-hidden
-      />
-
       {/* ID card content */}
       <div
-        className="badge-card-glaze absolute z-20 overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#fffaee]"
+        className="badge-card-glaze absolute z-20 overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#e8d4b4]"
         style={{
           left: `${(27.6 / 776) * 100}%`,
           top: `${(432.3 / 913) * 100}%`,
@@ -175,12 +165,13 @@ function BadgeHanging() {
           alt=""
           width={750}
           height={1143}
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-multiply"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45 mix-blend-multiply"
           aria-hidden
         />
+        <div className="badge-card-grain" aria-hidden />
 
         <div
-          className="absolute rounded-[6px] bg-[#8e1c08]"
+          className="absolute overflow-hidden rounded-[6px] bg-[#8e1c08]"
           style={{
             left: `${(BG_LEFT / CARD_INNER_W) * 100}%`,
             top: `${(BG_TOP / CARD_INNER_H) * 100}%`,
@@ -188,7 +179,16 @@ function BadgeHanging() {
             aspectRatio: `${BG_ASPECT}`,
           }}
           aria-hidden
-        />
+        >
+          <CrispImage
+            src={assets.whoWeAreBadgeTexture}
+            alt=""
+            width={750}
+            height={1143}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45 mix-blend-multiply"
+          />
+          <div className="badge-card-grain" />
+        </div>
 
         <CrispImage
           src={assets.whoWeAreHand}
@@ -213,30 +213,37 @@ function BadgeHanging() {
         />
 
         <div
-          className="font-who-we-are absolute top-1/2 flex -translate-y-1/2 flex-col gap-[0.35em] overflow-hidden text-[#563529]"
+          className="absolute top-1/2 flex -translate-y-1/2 flex-col overflow-hidden text-[#563529]"
           style={{
             left: `${((390 - 27.6) / CARD_W) * 100}%`,
             width: `${(302 / CARD_W) * 100}%`,
             maxHeight: `${TEXT_MAX_HEIGHT_CARD}%`,
             fontSize:
               "calc(var(--badge-bio-font-size) / var(--badge-bio-badge-height) * 100cqh)",
-            letterSpacing:
-              "calc(var(--badge-bio-letter-spacing) / var(--badge-bio-badge-height) * 100cqh)",
-            lineHeight: 1.05,
           }}
         >
-          <p>
-            Hi, I&apos;m your host,{" "}
-            <span className="font-bold text-[#8e1c08]">Diem</span>!
+          <p className="font-nav-title text-[0.48em] uppercase leading-none tracking-[0.22em] text-[#8e1c08]">
+            Host
           </p>
-          <p>
-            Every workshop I host is built around the feeling of slowing down
-            without the pressure to make anything &ldquo;great&rdquo;.
+          <p className="font-nav-title mt-[0.08em] text-[2.35em] uppercase leading-[0.8] tracking-[0.02em] text-[#8e1c08]">
+            Diem
           </p>
-          <p>I hope I can make these few hours feel like yours!</p>
+          <p className="mt-[0.28em] font-nav-cta text-description font-bold italic leading-[1.2] tracking-[-0.04em]">
+            Curator of clay &amp; whimsy
+          </p>
+          <div
+            className="my-[0.45em] w-[2.6em] rounded-full bg-[#8e1c08]/40"
+            style={{ height: "var(--divider-thickness)" }}
+            aria-hidden
+          />
+          <div className="flex flex-col gap-[0.45em] font-workshop-body text-description font-medium leading-[1.2] tracking-[0.36px]">
+            <p>
+              Every workshop I host is built around the feeling of slowing down
+              without the pressure to make anything &ldquo;great&rdquo;.
+            </p>
+            <p>I hope I can make these few hours feel like yours!</p>
+          </div>
         </div>
-
-        <div className="badge-shine badge-shine-card z-30" aria-hidden />
       </div>
     </>
   );
@@ -245,7 +252,6 @@ function BadgeHanging() {
 function Badge() {
   const rootRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const tiltRef = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<BadgePhase>("waiting");
 
   useEffect(() => {
@@ -320,61 +326,29 @@ function Badge() {
     };
   }, []);
 
-  const resetTilt = () => {
-    const tilt = tiltRef.current;
-    const root = rootRef.current;
-    if (tilt) tilt.style.transform = "rotateX(0deg) rotateY(0deg)";
-    if (root) {
-      root.style.setProperty("--shine-x", "42%");
-      root.style.setProperty("--shine-y", "28%");
-      root.style.setProperty("--tilt-px", "0");
-    }
-  };
-
-  const onPointerMove = (event: MouseEvent<HTMLDivElement>) => {
-    if (phase !== "rest") return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      return;
-    }
-    const tilt = tiltRef.current;
-    const root = rootRef.current;
-    if (!tilt || !root) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width;
-    const y = (event.clientY - rect.top) / rect.height;
-    const px = x - 0.5;
-    const py = y - 0.5;
-    root.style.setProperty("--shine-x", `${Math.round(x * 1000) / 10}%`);
-    root.style.setProperty("--shine-y", `${Math.round(y * 1000) / 10}%`);
-    root.style.setProperty("--tilt-px", String(px));
-    tilt.style.transform = `translateZ(24px) rotateX(${12 - py * 9}deg) rotateY(${px * 18}deg)`;
-  };
-
   const waiting = phase === "waiting";
   const dropping = phase === "dropping";
 
   return (
     <div
       ref={rootRef}
-      className={`relative -mt-[10px] w-full max-w-[776px] overflow-visible [perspective:1200px] ${
-        waiting ? "badge-is-waiting" : ""
-      } ${phase === "rest" ? "badge-can-tilt" : "pointer-events-none"}`}
+      className={`relative -mt-[10px] w-full max-w-[776px] overflow-visible${
+        waiting ? " badge-is-waiting" : ""
+      }${waiting || dropping ? " pointer-events-none" : ""}`}
       style={{ aspectRatio: "776 / 913" }}
-      onMouseMove={onPointerMove}
-      onMouseLeave={resetTilt}
     >
       <div
         ref={trackRef}
         className="badge-drop-track absolute inset-0"
         aria-hidden={waiting || dropping}
       >
-        <div ref={tiltRef} className="badge-tilt absolute inset-0">
+        <div className="badge-tilt absolute inset-0">
           <div
             className="absolute left-1/2 z-10 -translate-x-1/2 overflow-hidden bg-[#e60000]"
             style={{
-              top: 0,
+              top: "-40%",
               width: `${(STRAP_W / BADGE_W) * 100}%`,
-              height: `${(STRAP_H / BADGE_H) * 100}%`,
+              height: `${((STRAP_H / BADGE_H) * 100) + 40}%`,
             }}
           >
             <CrispFillImage

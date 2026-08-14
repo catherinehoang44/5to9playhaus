@@ -2,6 +2,7 @@ import { Fredoka, Bebas_Neue, Nunito_Sans, Inter, Rubik_Mono_One } from "next/fo
 import type { Metadata, Viewport } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { StickerPlayfield } from "@/components/StickerPlayfield";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -40,6 +41,13 @@ export const metadata: Metadata = {
   description:
     "Polymer clay workshops hosted by Diem. Cozy ticketed events, corporate sessions, and private bookings.",
   applicationName: "5-9 PLAY HAUS",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
   openGraph: {
     type: "website",
     locale: "en_CA",
@@ -82,10 +90,11 @@ export default function RootLayout({
       lang="en"
       className={`${fredoka.variable} ${bebasNeue.variable} ${nunitoSans.variable} ${inter.variable} ${rubikMonoOne.variable} h-full antialiased`}
     >
-      <body className="bg-grid flex min-h-full flex-col font-body">
+      <body className="bg-grid relative flex min-h-full flex-col font-body">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <StickerPlayfield />
       </body>
     </html>
   );
