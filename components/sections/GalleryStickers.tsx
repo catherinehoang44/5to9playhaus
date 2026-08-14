@@ -130,7 +130,7 @@ const desktopStickers = [
   {
     id: "swirl-left",
     node: <ClayCoil color="#dea242" flip />,
-    ...placed(-12, 492, 88, 78, -18, 16),
+    ...placed(-12, 521, 88, 78, -18, 16),
   },
   {
     id: "twinkle-mid",
@@ -191,7 +191,7 @@ export function MobileCollageStickers() {
 export function MobilePhotoStickers() {
   return (
     <>
-      <DraggableSticker className={`${stickerClass} -left-4 bottom-[18%] aspect-[90/80] w-[64px]`}>
+      <DraggableSticker className={`${stickerClass} -left-4 bottom-0 aspect-[90/80] w-[64px] translate-y-1/2`}>
         <Rotated className="-rotate-[20deg]">
           <ClayCoil color="#dea242" />
         </Rotated>
