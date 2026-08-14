@@ -67,14 +67,14 @@ function WorkshopTemplate({
         <div className="flex w-fit max-w-full flex-col items-stretch gap-6">
           <div>
             <div
-              className="h-0 overflow-hidden whitespace-nowrap font-nav-title text-heading-workshop-title font-bold uppercase leading-none"
+              className="h-0 overflow-hidden whitespace-nowrap font-nav-title text-[length:var(--heading-workshop-title-size)] font-bold uppercase leading-none md:text-[58px]"
               aria-hidden
             >
               {workshopTitleLines.map((line) => (
                 <div key={line}>{line}</div>
               ))}
             </div>
-            <h3 className="text-left font-nav-title text-heading-workshop-title font-bold uppercase leading-none text-nav-brown">
+            <h3 className="text-left font-nav-title text-[length:var(--heading-workshop-title-size)] font-bold uppercase leading-none text-nav-brown md:text-[58px]">
               <span className="block">{title[0]}</span>
               <span className="block">{title[1]}</span>
             </h3>

@@ -22,6 +22,7 @@ const TAPE_WIDE_ASPECT = "358.201 / 41.8418";
 const TAPE_NARROW_ASPECT = "63.4535 / 92.8867";
 
 const PHOTO_SHADOW = "shadow-[-12px_16px_22px_-8px_rgba(0,0,0,0.22)]";
+const PHOTO_FRAME = `overflow-hidden rounded-[var(--cta-radius)] ${PHOTO_SHADOW}`;
 
 function designBox(
   left: number,
@@ -87,7 +88,7 @@ function LeftTapedPhoto() {
         className="left-[41.25%] top-[3.95%] w-[17.5%] -translate-y-1/2"
       />
 
-      <div className={`absolute inset-x-0 bottom-0 top-[3.95%] overflow-hidden ${PHOTO_SHADOW}`}>
+      <div className={`absolute inset-x-0 bottom-0 top-[3.95%] ${PHOTO_FRAME}`}>
         <CrispImage
           src={assets.galleryPolaroidPhoto}
           alt="Diem hosting a workshop"
@@ -110,7 +111,7 @@ function RightTapedPhoto() {
         className="left-[23.67%] top-[1%] w-[52.66%]"
       />
 
-      <div className={`absolute inset-x-0 bottom-0 top-[3.95%] overflow-hidden ${PHOTO_SHADOW}`}>
+      <div className={`absolute inset-x-0 bottom-0 top-[3.95%] ${PHOTO_FRAME}`}>
         <CrispImage
           src={assets.galleryFigurines}
           alt="Dozens of finished clay figurines arranged on moss"
@@ -135,7 +136,7 @@ function MobileStacked() {
           aspect={TAPE_NARROW_ASPECT}
           className="left-1/2 top-0 w-[16%] -translate-x-1/2 -translate-y-1/2"
         />
-        <div className={`w-full overflow-hidden ${PHOTO_SHADOW}`}>
+        <div className={`w-full ${PHOTO_FRAME}`}>
           <CrispImage
             src={assets.galleryPolaroidPhoto}
             alt="Diem hosting a workshop"
@@ -155,7 +156,7 @@ function MobileStacked() {
           aspect={TAPE_WIDE_ASPECT}
           className="left-1/2 top-[-14px] w-[60%] -translate-x-1/2"
         />
-        <div className={`w-full overflow-hidden bg-[#f6f0e6] ${PHOTO_SHADOW}`}>
+        <div className={`w-full bg-[#f6f0e6] ${PHOTO_FRAME}`}>
           <CrispImage
             src={assets.galleryFigurines}
             alt="Dozens of finished clay figurines arranged on moss"

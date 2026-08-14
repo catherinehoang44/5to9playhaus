@@ -152,7 +152,7 @@ function BadgeHanging() {
 
       {/* ID card content */}
       <div
-        className="badge-card-glaze absolute z-20 overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#e8d4b4]"
+        className="badge-card-glaze absolute z-20 overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#E6BA8C]"
         style={{
           left: `${(27.6 / 776) * 100}%`,
           top: `${(432.3 / 913) * 100}%`,

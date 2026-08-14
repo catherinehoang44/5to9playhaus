@@ -24,7 +24,7 @@
   --heading-privacy-banner-size: clamp(40px, 8.5vw, 82px);
   --heading-easy-steps-label-size: clamp(3rem, 6.7vw, 6rem);
   --heading-main-title-size: clamp(19px, 2.6vw + 8px, 36px);
-  --heading-workshop-title-size: clamp(28px, 6vw + 10px, 36px);
+  --heading-workshop-title-size: clamp(28px, 6.5vw, 58px);
   --heading-privacy-section-size: clamp(19px, 2.6vw + 8px, 36px);
   --heading-nav-brand-size: clamp(20px, 4.5vw, 42px);
   --heading-nav-brand-size-fluid: clamp(20px, 2.5vw + 1rem, 32px);
@@ -36,14 +36,6 @@
   --badge-bio-badge-height: 913px;
   --divider-thickness: 2px;
   --cta-radius: 2px;
-
-}
-
-/* Workshops stay stacked until lg, so tablet needs a larger title than the 36px cap. */
-@media (min-width: 768px) and (max-width: 1023px) {
-  :root {
-    --heading-workshop-title-size: clamp(44px, 6.5vw, 58px);
-  }
 }
 
 @theme inline {
