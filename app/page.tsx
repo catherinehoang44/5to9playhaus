@@ -13,16 +13,14 @@ export default function Home() {
       <FadeInSection delay={STAGGER_MS * 0}>
         <Hero />
       </FadeInSection>
+      <WhoWeAre />
       <FadeInSection delay={STAGGER_MS * 1}>
-        <WhoWeAre />
-      </FadeInSection>
-      <FadeInSection delay={STAGGER_MS * 2}>
         <EasySteps />
       </FadeInSection>
-      <FadeInSection delay={STAGGER_MS * 3}>
+      <FadeInSection delay={STAGGER_MS * 2}>
         <Workshops />
       </FadeInSection>
-      <FadeInSection delay={STAGGER_MS * 4}>
+      <FadeInSection delay={STAGGER_MS * 3}>
         <Gallery />
       </FadeInSection>
     </div>

@@ -139,7 +139,7 @@ function ClayDiem() {
 
 function MobileStacked() {
   return (
-    <div className="flex flex-col items-center gap-10 px-4 sm:px-6 md:hidden">
+    <div className="flex flex-col items-center gap-10 px-4 pt-4 sm:px-6 md:hidden">
       <div className="relative w-full max-w-[360px]">
         <Tape
           tape={assets.galleryTapeWide}
@@ -198,7 +198,7 @@ function MobileStacked() {
 
 export function Gallery() {
   return (
-    <section className="bg-grid overflow-x-clip overflow-y-visible">
+    <section className="bg-grid overflow-x-clip overflow-y-visible pt-12 md:pt-16 lg:pt-0">
       <MobileStacked />
       <SiteContainer
         className="relative hidden w-full md:block"

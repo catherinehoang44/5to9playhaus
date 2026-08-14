@@ -10,6 +10,7 @@ export type BannerDiemLayer = {
   y: number;
   w: number;
   h: number;
+  className?: string;
 };
 
 export type BannerDiemEye = {
@@ -24,10 +25,20 @@ export type BannerDiemEye = {
 
 export type BannerDiemMouth = {
   mouth: BannerDiemLayer;
-  teethLines: BannerDiemLayer;
 };
 
 const asset = (name: string) => `/assets/banner-diem/${name}`;
+
+/** Figma group 52:276 — tooth bars masked onto the white mouth fill. */
+export const bannerDiemMouth: BannerDiemMouth = {
+  mouth: {
+    src: asset("mouth.svg"),
+    x: 93.76,
+    y: 384.36,
+    w: 103.2,
+    h: 37.83,
+  },
+};
 
 /** Base layers before mouth (paint order). */
 export const bannerDiemBaseLayersBeforeMouth: BannerDiemLayer[] = [
@@ -47,31 +58,15 @@ export const bannerDiemBaseLayersAfterMouth: BannerDiemLayer[] = [
   { src: asset("layer-12.svg"), x: 200.21, y: 227.74, w: 147.25, h: 151 },
 ];
 
-/** Figma mask group 93:2358 — teeth lines clipped to mouth shape. */
-export const bannerDiemMouth: BannerDiemMouth = {
-  mouth: {
-    src: asset("mouth.svg"),
-    x: 93.76,
-    y: 384.36,
-    w: 103.2,
-    h: 37.83,
-  },
-  teethLines: {
-    src: asset("teeth-lines.svg"),
-    x: 83.745,
-    y: 385.244,
-    w: 84.999,
-    h: 36.373,
-  },
-};
-
 export const bannerDiemEyes: BannerDiemEye[] = [
   {
     id: "right",
     underLayers: [],
     pupil: {
       src: asset("pupil-2.svg"),
-      x: 200.65,
+      // Sit slightly left of the sclera (200.21) so the left edges stay flush
+      // at large/retina sizes — Figma's 0.44px offset reads as a white sliver.
+      x: 199.7,
       y: 226.82,
       w: 119.46,
       h: 130.55,

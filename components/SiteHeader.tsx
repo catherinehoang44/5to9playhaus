@@ -4,13 +4,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { CtaLink } from "@/components/CtaLink";
 import { NavCenterTitle } from "@/components/NavCenterTitle";
+import { SiteContainer } from "@/components/SiteContainer";
 import { CONTACT_MAILTO } from "@/lib/contact";
 
 function NavDivider() {
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-1">
-      <div className="h-[6px] w-full bg-nav-brown" />
-      <div className="h-[3px] w-full bg-nav-brown" />
+    <div className="@container min-w-0 flex-1">
+      <div className="hidden w-full flex-col gap-1 @[80px]:flex">
+        <div className="h-[6px] w-full bg-nav-brown" />
+        <div className="h-[3px] w-full bg-nav-brown" />
+      </div>
     </div>
   );
 }
@@ -61,7 +64,7 @@ export function SiteHeader() {
 
   return (
     <header className="bg-grid h-nav sticky top-0 z-50 w-full">
-      <div className="relative flex h-full w-full items-center px-4 sm:px-6">
+      <SiteContainer className="relative flex h-full w-full items-center px-4 sm:px-6">
         <div
           ref={measureRef}
           aria-hidden
@@ -103,7 +106,7 @@ export function SiteHeader() {
             </div>
           )}
         </nav>
-      </div>
+      </SiteContainer>
     </header>
   );
 }

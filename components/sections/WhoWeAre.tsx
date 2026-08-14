@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { AnimatedFigurine } from "@/components/AnimatedFigurine";
 import { CrispFillImage, CrispImage } from "@/components/CrispImage";
 import { SiteContainer } from "@/components/SiteContainer";
@@ -5,7 +8,6 @@ import { assets } from "@/lib/assets";
 
 const BADGE_W = 776;
 const BADGE_H = 913;
-
 
 /** ID card content area — Figma 720.4 × 452 (6px border ⇒ 708.4 × 440 inner content). */
 const CARD_W = 720.4;
@@ -54,12 +56,52 @@ const BADGE_FRAME_TOP = 324.6;
 const BADGE_FRAME_H = 588.4;
 const BADGE_BG_LAYER_OFFSET = 8;
 
-function Badge() {
+type BadgePhase = "waiting" | "dropping" | "rest";
+
+const DROP_FROM_Y = -54;
+const DROP_FROM_ROT = -6.5;
+const DROP_CATCH_AT = 0.4;
+const DROP_DURATION_MS = 1420;
+
+/** Gravity drop, then a damped lanyard spring + pendulum (sampled, like CSS linear() bounce kits). */
+function hangingBadgeDropKeyframes(): Keyframe[] {
+  const steps = 56;
+  const frames: Keyframe[] = [];
+
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    let y: number;
+    let rot: number;
+
+    if (t <= DROP_CATCH_AT) {
+      const u = t / DROP_CATCH_AT;
+      const fall = u * u;
+      y = DROP_FROM_Y * (1 - fall);
+      rot = DROP_FROM_ROT + (1.2 - DROP_FROM_ROT) * fall;
+    } else {
+      const u = (t - DROP_CATCH_AT) / (1 - DROP_CATCH_AT);
+      const dampY = Math.exp(-4.2 * u);
+      const dampR = Math.exp(-1.75 * u);
+      y = 0.62 * dampY * Math.sin(Math.PI * 2 * 1.48 * u);
+      rot =
+        dampR *
+        (1.2 * Math.cos(Math.PI * 2 * 1.05 * u) +
+          6.4 * Math.sin(Math.PI * 2 * 1.05 * u));
+    }
+
+    frames.push({
+      offset: Math.round(t * 1000) / 1000,
+      opacity: t <= DROP_CATCH_AT ? Math.min(1, t / DROP_CATCH_AT / 0.85) : 1,
+      transform: `translate3d(0, ${y.toFixed(3)}%, 0) rotate(${rot.toFixed(3)}deg)`,
+    });
+  }
+
+  return frames;
+}
+
+function BadgeHanging() {
   return (
-    <div
-      className="relative w-full max-w-[776px] [container-type:size]"
-      style={{ aspectRatio: "776 / 913" }}
-    >
+    <>
       {/* Badge bg — FF9B8A accent (8px higher) under CB513C base */}
       <div
         className="absolute left-0 z-0 w-full"
@@ -94,25 +136,6 @@ function Badge() {
         />
       </div>
 
-      {/* Lanyard strap + buckle — above badge frame */}
-      <div
-        className="absolute left-1/2 z-10 -translate-x-1/2 overflow-hidden bg-[#e60000]"
-        style={{
-          top: 0,
-          width: `${(STRAP_W / BADGE_W) * 100}%`,
-          height: `${(STRAP_H / BADGE_H) * 100}%`,
-        }}
-      >
-        <CrispFillImage
-          src={assets.whoWeAreStrapTexture}
-          alt=""
-          width={STRAP_TEXTURE_W}
-          height={STRAP_TEXTURE_H}
-          className="pointer-events-none max-w-none object-cover mix-blend-color-burn opacity-20"
-          aria-hidden
-        />
-      </div>
-
       <div
         className="absolute left-1/2 z-10 flex -translate-x-1/2 items-center justify-center rounded-[6px] border-t-[3px] border-[#e68925] bg-[#c06300]"
         style={{
@@ -127,9 +150,19 @@ function Badge() {
         />
       </div>
 
+      <div
+        className="pointer-events-none badge-shine badge-shine-holder absolute left-0 z-[25]"
+        style={{
+          top: `${(BADGE_FRAME_TOP / BADGE_H) * 100}%`,
+          height: `${(BADGE_FRAME_H / BADGE_H) * 100}%`,
+          width: "100%",
+        }}
+        aria-hidden
+      />
+
       {/* ID card content */}
       <div
-        className="absolute z-20 overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#fffaee]"
+        className="badge-card-glaze absolute z-20 overflow-hidden rounded-[6px] border-[6px] border-[#901c08] bg-[#fffaee]"
         style={{
           left: `${(27.6 / 776) * 100}%`,
           top: `${(432.3 / 913) * 100}%`,
@@ -146,7 +179,6 @@ function Badge() {
           aria-hidden
         />
 
-        {/* Figurine bg — locked-aspect maroon rectangle on the left half of the card */}
         <div
           className="absolute rounded-[6px] bg-[#8e1c08]"
           style={{
@@ -158,7 +190,6 @@ function Badge() {
           aria-hidden
         />
 
-        {/* Hand — pinned to inner bottom-left of the card, aspect-locked */}
         <CrispImage
           src={assets.whoWeAreHand}
           alt=""
@@ -172,7 +203,6 @@ function Badge() {
           aria-hidden
         />
 
-        {/* Figurine — 8-frame rotation flipbook, centered on the palm */}
         <AnimatedFigurine
           style={{
             left: `${(FIG_LEFT / CARD_INNER_W) * 100}%`,
@@ -205,6 +235,159 @@ function Badge() {
           </p>
           <p>I hope I can make these few hours feel like yours!</p>
         </div>
+
+        <div className="badge-shine badge-shine-card z-30" aria-hidden />
+      </div>
+    </>
+  );
+}
+
+function Badge() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState<BadgePhase>("waiting");
+
+  useEffect(() => {
+    const root = rootRef.current;
+    const track = trackRef.current;
+    if (!root || !track) return;
+
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let played = false;
+    let animation: Animation | null = null;
+
+    const play = () => {
+      if (played) return;
+      played = true;
+
+      if (reduced) {
+        setPhase("rest");
+        return;
+      }
+
+      setPhase("dropping");
+      animation = track.animate(hangingBadgeDropKeyframes(), {
+        duration: DROP_DURATION_MS,
+        easing: "linear",
+        fill: "forwards",
+      });
+
+      animation.finished
+        .then(() => {
+          animation?.commitStyles();
+          animation?.cancel();
+          track.style.transform = "none";
+          track.style.opacity = "1";
+          setPhase("rest");
+        })
+        .catch(() => {
+          setPhase("rest");
+        });
+    };
+
+    const shouldReveal = () => {
+      const rect = root.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const inStage = rect.top < vh * 0.72 && rect.bottom > vh * 0.12;
+      if (!inStage) return false;
+      // Sitting at the top of the page: wait until the user actually scrolls
+      // so the drop isn't already finished off-screen / below the hero.
+      if (window.scrollY < 8 && rect.top > 96) return false;
+      return true;
+    };
+
+    const check = () => {
+      if (shouldReveal()) play();
+    };
+
+    const observer = new IntersectionObserver(check, {
+      threshold: [0, 0.08, 0.16, 0.28, 0.4, 0.55, 0.7],
+    });
+    observer.observe(root);
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    check();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+      animation?.cancel();
+    };
+  }, []);
+
+  const resetTilt = () => {
+    const tilt = tiltRef.current;
+    const root = rootRef.current;
+    if (tilt) tilt.style.transform = "rotateX(0deg) rotateY(0deg)";
+    if (root) {
+      root.style.setProperty("--shine-x", "42%");
+      root.style.setProperty("--shine-y", "28%");
+      root.style.setProperty("--tilt-px", "0");
+    }
+  };
+
+  const onPointerMove = (event: MouseEvent<HTMLDivElement>) => {
+    if (phase !== "rest") return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      return;
+    }
+    const tilt = tiltRef.current;
+    const root = rootRef.current;
+    if (!tilt || !root) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+    const px = x - 0.5;
+    const py = y - 0.5;
+    root.style.setProperty("--shine-x", `${Math.round(x * 1000) / 10}%`);
+    root.style.setProperty("--shine-y", `${Math.round(y * 1000) / 10}%`);
+    root.style.setProperty("--tilt-px", String(px));
+    tilt.style.transform = `translateZ(24px) rotateX(${12 - py * 9}deg) rotateY(${px * 18}deg)`;
+  };
+
+  const waiting = phase === "waiting";
+  const dropping = phase === "dropping";
+
+  return (
+    <div
+      ref={rootRef}
+      className={`relative -mt-[10px] w-full max-w-[776px] overflow-visible [perspective:1200px] ${
+        waiting ? "badge-is-waiting" : ""
+      } ${phase === "rest" ? "badge-can-tilt" : "pointer-events-none"}`}
+      style={{ aspectRatio: "776 / 913" }}
+      onMouseMove={onPointerMove}
+      onMouseLeave={resetTilt}
+    >
+      <div
+        ref={trackRef}
+        className="badge-drop-track absolute inset-0"
+        aria-hidden={waiting || dropping}
+      >
+        <div ref={tiltRef} className="badge-tilt absolute inset-0">
+          <div
+            className="absolute left-1/2 z-10 -translate-x-1/2 overflow-hidden bg-[#e60000]"
+            style={{
+              top: 0,
+              width: `${(STRAP_W / BADGE_W) * 100}%`,
+              height: `${(STRAP_H / BADGE_H) * 100}%`,
+            }}
+          >
+            <CrispFillImage
+              src={assets.whoWeAreStrapTexture}
+              alt=""
+              width={STRAP_TEXTURE_W}
+              height={STRAP_TEXTURE_H}
+              className="pointer-events-none max-w-none object-cover mix-blend-color-burn opacity-20"
+              aria-hidden
+            />
+          </div>
+          <BadgeHanging />
+        </div>
       </div>
     </div>
   );
@@ -212,19 +395,9 @@ function Badge() {
 
 export function WhoWeAre() {
   return (
-    <section className="bg-grid -mt-[var(--section-gap)] overflow-x-clip overflow-y-visible">
-      <SiteContainer className="relative px-4 pb-[var(--who-we-are-section-padding)] sm:px-6 lg:pl-16">
-        {/* Visual heading is desktop-only (vertical). Screen readers still get an h2. */}
+    <section className="bg-grid -mt-[var(--section-gap)] overflow-visible [clip-path:inset(0_-100vw_-100vh_-100vw)]">
+      <SiteContainer className="relative px-4 pb-[var(--who-we-are-section-padding)] sm:px-6">
         <h2 className="sr-only">WHO WE ARE</h2>
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-6 hidden items-end justify-center lg:flex"
-        >
-          <p className="vertical-label font-nav-title text-heading-who-we-are font-bold leading-none tracking-[0.28em] whitespace-nowrap text-[#e57c62]">
-            WHO WE ARE
-          </p>
-        </div>
 
         <div className="flex w-full justify-center">
           <Badge />

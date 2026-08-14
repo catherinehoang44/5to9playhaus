@@ -25,7 +25,7 @@ function WorkshopTemplate({
   return (
     <article className="flex w-full flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-[210px]">
       <div className="flex w-full flex-col items-start gap-6 lg:max-w-[390px] lg:shrink-0">
-        <h3 className="w-full text-left font-nav-title text-heading-main-title leading-none text-nav-brown">
+        <h3 className="w-full text-left font-nav-title text-heading-workshop-title font-bold leading-none text-nav-brown">
           <span className="block">{title[0]}</span>
           <span className="block">{title[1]}</span>
         </h3>
@@ -98,7 +98,7 @@ const workshops: WorkshopTemplateProps[] = [
 
 export function Workshops() {
   return (
-    <section className="bg-grid">
+    <section className="bg-grid pb-12 md:pb-16 lg:pb-0">
       <SiteContainer className="flex flex-col gap-16 px-4 sm:px-6 lg:gap-24">
         {workshops.map((workshop) => (
           <WorkshopTemplate key={workshop.title.join("-")} {...workshop} />

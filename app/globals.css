@@ -25,6 +25,7 @@
   --heading-privacy-banner-size: clamp(40px, 8.5vw, 82px);
   --heading-easy-steps-label-size: clamp(3rem, 6.7vw, 6rem);
   --heading-main-title-size: clamp(19px, 2.6vw + 8px, 36px);
+  --heading-workshop-title-size: clamp(28px, 6vw + 10px, 36px);
   --heading-privacy-section-size: clamp(19px, 2.6vw + 8px, 36px);
   --heading-nav-brand-size: clamp(20px, 4.5vw, 42px);
   --heading-nav-brand-size-fluid: clamp(20px, 2.5vw + 1rem, 32px);
@@ -58,6 +59,7 @@
   --text-heading-privacy-banner: var(--heading-privacy-banner-size);
   --text-heading-easy-steps: var(--heading-easy-steps-label-size);
   --text-heading-main-title: var(--heading-main-title-size);
+  --text-heading-workshop-title: var(--heading-workshop-title-size);
   --text-heading-privacy-section: var(--heading-privacy-section-size);
   --text-heading-nav-brand: var(--heading-nav-brand-size);
   --text-heading-nav-brand-fluid: var(--heading-nav-brand-size-fluid);
@@ -77,6 +79,7 @@ body {
 .site-container {
   width: 100%;
   max-width: var(--site-max-width);
+  min-width: 0;
   margin-left: auto;
   margin-right: auto;
 }
@@ -137,10 +140,160 @@ body {
   }
 }
 
+.badge-drop-track {
+  transform-origin: 50% 0%;
+  will-change: transform;
+}
+
+.badge-is-waiting .badge-drop-track {
+  opacity: 0;
+  transform: translate3d(0, -54%, 0) rotate(-6.5deg);
+}
+
+.badge-tilt {
+  /* Size container for cqh bio type — keep this off the overflow root so
+     layout containment doesn't clip the hover tilt left/right. */
+  container-type: size;
+  transform-origin: 50% 0%;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 10px 16px rgba(80, 22, 12, 0.18));
+}
+
+.badge-can-tilt:hover .badge-tilt {
+  filter: drop-shadow(calc(var(--tilt-px, 0) * -22px) 18px 26px rgba(80, 22, 12, 0.32));
+}
+
+.badge-shine {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.badge-can-tilt:hover .badge-shine {
+  opacity: 1;
+}
+
+.badge-shine-holder {
+  background:
+    radial-gradient(
+      90% 70% at var(--shine-x, 42%) var(--shine-y, 28%),
+      rgba(255, 255, 255, 0.38) 0%,
+      rgba(255, 255, 255, 0.08) 32%,
+      transparent 58%
+    ),
+    linear-gradient(
+      118deg,
+      transparent 36%,
+      rgba(255, 255, 255, 0.22) 47%,
+      rgba(255, 255, 255, 0.05) 51%,
+      transparent 64%
+    );
+  mix-blend-mode: soft-light;
+}
+
+.badge-shine-card {
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      85% 70% at var(--shine-x, 42%) var(--shine-y, 28%),
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.18) 26%,
+      transparent 55%
+    );
+  mix-blend-mode: soft-light;
+}
+
+.badge-shine-card::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: linear-gradient(
+    118deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.55) 48.5%,
+    rgba(255, 248, 230, 0.18) 51%,
+    transparent 62%
+  );
+  transform: translate3d(
+    calc((var(--shine-x, 50%) - 50%) * 0.7),
+    calc((var(--shine-y, 30%) - 50%) * 0.45),
+    0
+  );
+  mix-blend-mode: overlay;
+}
+
+.badge-card-glaze {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -10px 18px rgba(80, 20, 10, 0.06);
+}
+
+.cta-link {
+  color: var(--color-nav-brown);
+}
+
+.cta-link img {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-highlight {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--color-nav-mustard);
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.cta-link:hover .cta-highlight,
+.cta-link:focus-visible .cta-highlight {
+  animation: cta-highlighter 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes cta-highlighter {
+  0% {
+    transform: scaleX(1);
+  }
+  16% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .cta-link:hover .cta-highlight,
+  .cta-link:focus-visible .cta-highlight {
+    animation: none;
+  }
+
   .fade-in-section {
     opacity: 1;
     animation: none;
+    transform: none;
+  }
+
+  .badge-is-waiting .badge-drop-track {
+    opacity: 0;
+    transform: none;
+  }
+
+  .badge-tilt {
+    transition: none;
+  }
+
+  .badge-can-tilt:hover .badge-shine {
+    opacity: 0.45;
+  }
+
+  .badge-shine-card::after {
     transform: none;
   }
 }

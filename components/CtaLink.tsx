@@ -38,10 +38,11 @@ export function CtaLink({
   return (
     <Link
       href={href}
-      className={`inline-flex w-fit shrink-0 items-center gap-2 bg-nav-mustard px-2 py-0 transition-opacity hover:opacity-85 ${className}`.trim()}
+      className={`cta-link relative isolate inline-flex w-fit shrink-0 items-center gap-2 overflow-hidden px-2 py-0 ${className}`.trim()}
     >
+      <span className="cta-highlight" aria-hidden />
       {iconPosition === "left" && iconEl}
-      <span className="font-nav-cta text-description font-bold uppercase leading-normal whitespace-nowrap text-nav-brown">
+      <span className="relative font-nav-cta text-description font-bold uppercase leading-normal whitespace-nowrap text-nav-brown">
         {label}
       </span>
       {iconPosition === "right" && iconEl}

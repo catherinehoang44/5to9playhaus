@@ -71,7 +71,7 @@ export function EasySteps() {
           <span className="lg:block">STEPS</span>
         </h2>
 
-        <div className="flex min-w-0 flex-1 flex-col items-stretch gap-8 sm:gap-10 md:flex-row md:items-start">
+        <div className="grid min-w-0 flex-1 grid-cols-3 items-start gap-3 sm:gap-6 md:gap-10">
           {steps.map((step) => (
             <StepCard key={step.number} {...step} />
           ))}
