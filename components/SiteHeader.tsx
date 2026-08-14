@@ -1,7 +1,7 @@
 import { CtaLink } from "@/components/CtaLink";
 import { NavCenterTitle } from "@/components/NavCenterTitle";
 import { SiteContainer } from "@/components/SiteContainer";
-import { CONTACT_MAILTO } from "@/lib/contact";
+import { CONTACT_MAILTO, BOOK_NOW_URL } from "@/lib/contact";
 
 export function SiteHeader() {
   return (
@@ -13,7 +13,7 @@ export function SiteHeader() {
         >
           <NavCenterTitle align="left" className="min-w-0 leading-[1.05]" />
           <div className="grid shrink-0 grid-flow-col items-stretch gap-2 sm:gap-3">
-            <CtaLink href={CONTACT_MAILTO} label="Book Now" icon="calendar" />
+            <CtaLink href={BOOK_NOW_URL} label="Book Now" icon="calendar" />
             <CtaLink
               href={CONTACT_MAILTO}
               label="Email"

@@ -3,7 +3,7 @@ import { CtaLink } from "@/components/CtaLink";
 import { WaveDivider } from "@/components/ScallopEdge";
 import { SiteContainer } from "@/components/SiteContainer";
 import { assets } from "@/lib/assets";
-import { CONTACT_MAILTO } from "@/lib/contact";
+import { BOOK_NOW_URL, CONTACT_MAILTO } from "@/lib/contact";
 
 /** Figma workshop image frame at 1242px: 642 × 390 */
 const WORKSHOP_IMAGE_ASPECT = 642 / 390;
@@ -13,7 +13,7 @@ const workshops: WorkshopTemplateProps[] = [
     title: ["Cozy", "Workshops"],
     description:
       "These are reoccurring ticketed events! Come alone or with a friend for warm lighting, a cup of something hot, and everything you need to make your own clay figurine in 3 hours!",
-    cta: { href: CONTACT_MAILTO, label: "Book Now", icon: "calendar" },
+    cta: { href: BOOK_NOW_URL, label: "Book Now", icon: "calendar" },
     image: assets.workshopCozy,
     alt: "People crafting at a cozy workshop table",
   },

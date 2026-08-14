@@ -37,10 +37,14 @@ export function CtaLink({
     />
   );
 
+  const isExternal = href.startsWith("http://") || href.startsWith("https://");
+
   return (
     <Link
       href={href}
       aria-label={iconOnly ? label : undefined}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
       className={`cta-link relative isolate flex h-full w-fit shrink-0 items-center justify-center overflow-hidden px-2 py-0 font-nav-cta text-description font-bold uppercase leading-normal min-h-[1lh] ${iconOnly ? "" : "gap-2"} ${className}`.trim()}
     >
       <span className="cta-highlight" aria-hidden />
